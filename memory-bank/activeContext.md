@@ -5,7 +5,7 @@ We are implementing the MVVM architecture for the Brainy Flutter app. The main g
 1. Establish a clean, maintainable architecture
 2. Create reusable base classes for views and view models
 3. Setup proper dependency injection
-4. Implement authentication flow
+4. Implement authentication flow with proper error handling
 
 ## Recent Changes
 - Created `BaseViewModel` class to standardize view model behavior
@@ -15,6 +15,9 @@ We are implementing the MVVM architecture for the Brainy Flutter app. The main g
 - Fixed shared_preferences implementation to prevent MissingPluginException
 - Removed duplicate code and unified the services structure
 - Added a username field to the signup form
+- Refactored SignupView to use the BaseView pattern
+- Created a dedicated SignupViewModel to handle registration logic
+- Fixed authentication flow to redirect to login after successful signup (since API doesn't return tokens on signup)
 
 ## Active Decisions
 - Using MVVM pattern over other architectures because:
@@ -33,6 +36,11 @@ We are implementing the MVVM architecture for the Brainy Flutter app. The main g
   - Avoids passing dependencies through constructors
   - Provides both singletons and factory instances
 
+- Signup flow redirect to login:
+  - Current API design doesn't return auth tokens on signup
+  - User must explicitly log in after registration
+  - Shows a success dialog before redirecting to login
+
 ## Technical Debt
 - Some duplicate service implementations (now cleaned up)
 - Need to add comprehensive error handling
@@ -42,9 +50,9 @@ We are implementing the MVVM architecture for the Brainy Flutter app. The main g
 
 ## Next Steps
 1. Complete the authentication flow
-   - Implement login functionality
-   - Store auth tokens securely
    - Add token refresh mechanism
+   - Implement auto-login on app start
+   - Add logout functionality with token invalidation
 
 2. Create vocabulary feature
    - Implement vocabulary list view

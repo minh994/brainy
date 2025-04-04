@@ -3,6 +3,7 @@ import '../../features/auth/controllers/auth_controller.dart';
 import '../../features/auth/viewmodels/login_view_model.dart';
 import '../../features/vocabulary/viewmodels/vocabulary_list_view_model.dart';
 import '../../features/vocabulary/viewmodels/vocabulary_detail_view_model.dart';
+import '../../features/auth/viewmodels/signup_view_model.dart';
 import '../repositories/abstract/auth_repository.dart';
 import '../repositories/implementations/auth_repository_impl.dart';
 import '../repositories/abstract/word_repository.dart';
@@ -69,5 +70,9 @@ Future<void> setupLocator() async {
 
   locator.registerFactory(
     () => VocabularyDetailViewModel(wordRepository: locator<WordRepository>()),
+  );
+
+  locator.registerFactory(
+    () => SignupViewModel(authRepository: locator<AuthRepository>()),
   );
 }
