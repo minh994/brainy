@@ -1,35 +1,32 @@
 import '../../models/api_response.dart';
-import '../../models/word_models.dart';
+import '../../models/word_model.dart';
 
 abstract class WordRepository {
-  /// Get all words
-  Future<ApiResponse<List<Word>>> getAllWords();
+  /// Lấy danh sách từ vựng
+  Future<ApiResponse<List<Word>>> getWords();
 
-  /// Get a word by ID
-  Future<ApiResponse<Word>> getWordById(String wordId);
+  /// Lấy thông tin chi tiết từ vựng theo ID
+  Future<ApiResponse<Word>> getWordById(String id);
 
-  /// Search words by keyword
-  Future<ApiResponse<List<Word>>> searchWords(String keyword);
+  /// Thêm từ vựng mới
+  Future<ApiResponse<Word>> addWord(Word word);
 
-  /// Create a new word
-  Future<ApiResponse<Word>> createWord(WordCreateRequest request);
+  /// Cập nhật thông tin từ vựng
+  Future<ApiResponse<Word>> updateWord(Word word);
 
-  /// Update a word
-  Future<ApiResponse<Word>> updateWord(
-    String wordId,
-    Map<String, dynamic> data,
-  );
+  /// Xóa từ vựng
+  Future<ApiResponse<void>> deleteWord(String id);
 
-  /// Delete a word
-  Future<ApiResponse<void>> deleteWord(String wordId);
+  /// Lấy danh sách từ vựng yêu thích
+  Future<ApiResponse<List<Word>>> getFavoriteWords();
 
-  /// Import words
-  Future<ApiResponse<Map<String, dynamic>>> importWords(
-    List<WordCreateRequest> words,
-  );
+  /// Lấy danh sách từ vựng theo mức độ thành thạo
+  Future<ApiResponse<List<Word>>> getWordsByProficiency(int level);
 
-  /// Import words from file
-  Future<ApiResponse<Map<String, dynamic>>> importWordsFromFile(
-    dynamic fileData,
-  );
+  /// Tìm kiếm từ vựng
+  Future<ApiResponse<List<Word>>> searchWords(String query);
+
+  /// Lấy danh sách từ vựng có phân trang
+  Future<ApiResponse<List<Word>>> getWordsPaginated(
+      {int page = 1, int limit = 10});
 }

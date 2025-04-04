@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../features/auth/views/login_view.dart';
 import '../../features/auth/views/signup_view.dart';
-import '../../features/home/views/home_view.dart';
-import '../../features/vocabulary/views/vocabulary_list_view.dart';
+import '../../features/home/screens/main_screen.dart';
+import '../../features/vocabulary/vocabulary_routes.dart';
+import '../../features/vocabulary/screens/vocabulary_list_screen.dart';
 
 class AppRouter {
   // Route names
@@ -12,18 +13,25 @@ class AppRouter {
   static const String signup = '/signup';
   static const String home = '/home';
   static const String vocabulary = '/vocabulary';
+  static const String vocabularyDetail = VocabularyRoutes.vocabularyDetail;
 
   // Route generator
   static Route<dynamic> generateRoute(RouteSettings settings) {
+    // First check if the route is a vocabulary feature route
+    if (settings.name?.startsWith('/vocabulary/') ?? false) {
+      return VocabularyRoutes.generateRoute(settings);
+    }
+
+    // If not, handle with main router
     switch (settings.name) {
       case login:
         return MaterialPageRoute(builder: (_) => const LoginView());
       case signup:
         return MaterialPageRoute(builder: (_) => const SignupView());
       case home:
-        return MaterialPageRoute(builder: (_) => const HomeView());
+        return MaterialPageRoute(builder: (_) => const MainScreen());
       case vocabulary:
-        return MaterialPageRoute(builder: (_) => const VocabularyListView());
+        return MaterialPageRoute(builder: (_) => const VocabularyListScreen());
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(
