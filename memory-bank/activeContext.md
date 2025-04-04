@@ -1,43 +1,62 @@
 # Active Context
 
-## Trạng thái hiện tại
-- Đang trong giai đoạn khởi tạo dự án
-- Đã thiết lập cấu trúc Memory Bank cơ bản
-- Chuẩn bị bắt đầu phát triển các thành phần cốt lõi
+## Current Focus
+We are implementing the MVVM architecture for the Brainy Flutter app. The main goals are:
+1. Establish a clean, maintainable architecture
+2. Create reusable base classes for views and view models
+3. Setup proper dependency injection
+4. Implement authentication flow
 
-## Các thay đổi gần đây
-- Tạo thư mục memory-bank
-- Khởi tạo các file cốt lõi của Memory Bank
-- Thiết lập cấu trúc tài liệu cơ bản
+## Recent Changes
+- Created `BaseViewModel` class to standardize view model behavior
+- Created `BaseView` widget to manage the view/view model lifecycle
+- Implemented `BusyIndicator` for consistent loading states
+- Set up GetIt service locator for dependency injection
+- Fixed shared_preferences implementation to prevent MissingPluginException
+- Removed duplicate code and unified the services structure
+- Added a username field to the signup form
 
-## Các quyết định đang thực hiện
-1. Kiến trúc hệ thống
-   - Lựa chọn công nghệ stack
-   - Thiết kế cấu trúc dữ liệu
-   - Quyết định về mô hình AI
+## Active Decisions
+- Using MVVM pattern over other architectures because:
+  - Clear separation of UI and business logic
+  - Testability of view models
+  - Consistent state management
+  - Reusability of components
 
-2. Quy trình phát triển
-   - Thiết lập quy trình code review
-   - Định nghĩa coding standards
-   - Thiết lập CI/CD pipeline
+- Using repository pattern for data access:
+  - Abstracts data source implementation details
+  - Allows for easier testing with mock data
+  - Provides a clean interface for view models
 
-## Các vấn đề đang gặp phải
-- Cần xác định rõ yêu cầu chi tiết của người dùng
-- Cần đánh giá khả năng mở rộng của hệ thống
-- Cần xác định các metrics để đánh giá hiệu suất
+- Implementing a service locator with GetIt:
+  - Efficient dependency injection
+  - Avoids passing dependencies through constructors
+  - Provides both singletons and factory instances
 
-## Các bước tiếp theo
-1. Phát triển MVP
-   - Thiết kế giao diện cơ bản
-   - Xây dựng API endpoints
-   - Tích hợp AI model cơ bản
+## Technical Debt
+- Some duplicate service implementations (now cleaned up)
+- Need to add comprehensive error handling
+- Need to implement proper loading states in all views
+- Should add unit tests for view models
+- Consider implementing more robust state management if needed
 
-2. Testing & QA
-   - Thiết lập môi trường test
-   - Viết unit tests
-   - Thiết lập automated testing
+## Next Steps
+1. Complete the authentication flow
+   - Implement login functionality
+   - Store auth tokens securely
+   - Add token refresh mechanism
 
-3. Documentation
-   - API documentation
-   - User guides
-   - Technical documentation 
+2. Create vocabulary feature
+   - Implement vocabulary list view
+   - Add vocabulary detail view
+   - Connect to API endpoints
+
+3. Enhance UI components
+   - Standardize form fields
+   - Create a consistent theme
+   - Add animation transitions
+
+4. Add unit and widget tests
+   - Test view models
+   - Test repositories
+   - Test critical UI components 

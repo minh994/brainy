@@ -1,76 +1,103 @@
 # Technical Context
 
-## Công nghệ sử dụng
-1. Frontend
-   - React 18
-   - Next.js 14
-   - TypeScript
-   - Tailwind CSS
-   - Redux Toolkit
+## Technology Stack
 
-2. Backend
-   - Node.js
-   - Express.js
-   - TypeScript
-   - MongoDB
-   - Redis
+### Core Technologies
+- **Flutter**: Cross-platform UI framework (latest stable version)
+- **Dart**: Programming language for Flutter development
+- **Provider**: State management using InheritedWidgets
+- **Get_It**: Dependency injection service locator
 
-3. AI & ML
-   - TensorFlow.js
-   - Natural Language Processing
-   - Machine Learning Models
+### Persistence
+- **shared_preferences**: Lightweight key-value storage
+- **REST API**: Backend communication
 
-4. Công cụ phát triển
-   - Git
-   - Docker
-   - Jest
-   - ESLint
-   - Prettier
+### Key Dependencies
+- **http**: HTTP requests and API communication
+- **provider**: ChangeNotifier-based state management
 
-## Cấu hình môi trường
-1. Development
-   - Node.js v18+
-   - MongoDB v6+
-   - Redis v7+
-   - Docker Desktop
+## Development Environment
 
-2. Production
-   - Cloud hosting (AWS/GCP)
-   - Container orchestration
-   - CI/CD pipeline
+### Setup Requirements
+- Flutter SDK (latest stable version)
+- Dart SDK (included with Flutter)
+- IDE: VS Code or Android Studio
+- Git for version control
 
-## Các ràng buộc kỹ thuật
-1. Performance
-   - Response time < 200ms
-   - 99.9% uptime
-   - Scalable architecture
+### Build & Run
+- Development: `flutter run`
+- Release: `flutter build apk` (Android) or `flutter build ios` (iOS)
 
-2. Security
-   - HTTPS
-   - JWT authentication
-   - Rate limiting
-   - Input validation
+## Architecture Components
 
-3. Data
-   - GDPR compliance
-   - Data encryption
-   - Regular backups
+### Core Infrastructure
+- **BaseViewModel**: Abstract ViewModel base class with common functionality
+- **BaseView**: State management wrapper for widgets
+- **BusyIndicator**: Standardized loading indicator
 
-## Quy trình phát triển
-1. Code Standards
-   - TypeScript strict mode
-   - ESLint rules
-   - Prettier formatting
-   - Unit test coverage > 80%
+### Authentication
+- Token-based authentication
+- JWT format (access token + refresh token)
+- Local credential storage
 
-2. Git Workflow
-   - Feature branches
-   - Pull request reviews
-   - Semantic versioning
-   - Automated testing
+### API Client
+- RESTful API communication
+- Generic response handling
+- Error handling and retries
 
-3. Deployment
-   - Staging environment
-   - Blue-green deployment
-   - Rollback capability
-   - Monitoring & logging 
+### Storage Services
+- Secure credential storage
+- User preferences
+- App state persistence
+
+## Code Conventions
+
+### File Structure
+- **Naming**: snake_case for filenames
+- **Organization**: Feature-based structure
+- **Views**: Named as `feature_view.dart`
+- **ViewModels**: Named as `feature_view_model.dart`
+
+### Dart Style
+- Follow official Dart style guide
+- Use strong types (avoid `dynamic` where possible)
+- Use `final` for immutable variables
+- Leverage Dart null safety features
+
+### Widget Structure
+- Stateless widgets preferred
+- ExtractWidget for reusable components
+- Composition over inheritance
+
+### Error Handling
+- Centralized error handling in ViewModels
+- User-friendly error messages
+- Detailed logging for debugging
+
+## Testing Strategy
+
+### Unit Tests
+- ViewModel logic
+- Repository implementations
+- Service classes
+
+### Widget Tests
+- Component rendering
+- User interactions
+- State changes
+
+### Integration Tests
+- Critical user journeys
+- API interactions
+
+## Security Considerations
+- Secure storage for tokens
+- HTTPS for all API communications
+- Input validation
+- Obfuscation in release builds
+
+## Performance Guidelines
+- Minimize rebuilds
+- Lazy loading for large datasets
+- Image optimization
+- Memory management for disposable resources 
