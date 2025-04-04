@@ -3,17 +3,20 @@ import 'package:http/http.dart' as http;
 import '../../models/api_response.dart';
 import '../../models/auth_models.dart';
 import '../storage/storage_service.dart';
+import '../../config/env_config.dart';
 
 class BrainyApiClient {
   final String baseUrl;
   final StorageService storageService;
   final http.Client httpClient;
+  final EnvConfig _envConfig = EnvConfig();
 
   BrainyApiClient({
-    required this.baseUrl,
+    String? baseUrl,
     required this.storageService,
     http.Client? httpClient,
-  }) : httpClient = httpClient ?? http.Client();
+  })  : baseUrl = baseUrl ?? EnvConfig().apiBaseUrl,
+        httpClient = httpClient ?? http.Client();
 
   /// Perform a GET request
   Future<ApiResponse<T>> get<T>(
@@ -131,23 +134,30 @@ class BrainyApiClient {
       }
     }
 
-    switch (method) {
-      case 'GET':
-        return httpClient.get(uri, headers: headers);
-      case 'POST':
-        return httpClient.post(uri, headers: headers, body: json.encode(body));
-      case 'PUT':
-        return httpClient.put(uri, headers: headers, body: json.encode(body));
-      case 'DELETE':
-        return httpClient.delete(uri, headers: headers);
-      default:
-        throw Exception('Unsupported HTTP method: $method');
+    final request = http.Request(method, uri);
+    request.headers.addAll(headers);
+
+    if (body != null) {
+      request.body = json.encode(body);
+    }
+
+    // Set timeout
+    final timeout = _envConfig.apiTimeout;
+
+    try {
+      final streamedResponse = await httpClient
+          .send(request)
+          .timeout(Duration(milliseconds: timeout));
+      return http.Response.fromStream(streamedResponse);
+    } catch (e) {
+      throw Exception('Network error: ${e.toString()}');
     }
   }
 
   /// Get auth token from storage
   Future<String?> _getAuthToken() async {
-    final tokenJson = await storageService.get('auth_token');
+    final tokenKey = _envConfig.authTokenKey;
+    final tokenJson = await storageService.get(tokenKey);
     if (tokenJson != null) {
       try {
         final token = AuthToken.fromJson(json.decode(tokenJson));

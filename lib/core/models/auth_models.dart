@@ -3,6 +3,8 @@ class User {
   final String username;
   final String email;
   final String fullName;
+  final String? avatarUrl;
+  final String? status;
   final String? createdAt;
   final String? updatedAt;
 
@@ -11,6 +13,8 @@ class User {
     required this.username,
     required this.email,
     required this.fullName,
+    this.avatarUrl,
+    this.status,
     this.createdAt,
     this.updatedAt,
   });
@@ -21,6 +25,8 @@ class User {
       username: json['username'] ?? '',
       email: json['email'] ?? '',
       fullName: json['full_name'] ?? '',
+      avatarUrl: json['avatar_url'],
+      status: json['status'],
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
     );
@@ -32,6 +38,8 @@ class User {
       'username': username,
       'email': email,
       'full_name': fullName,
+      'avatar_url': avatarUrl,
+      'status': status,
       'created_at': createdAt,
       'updated_at': updatedAt,
     };
@@ -68,24 +76,49 @@ class AuthToken {
 
 class AuthResponse {
   final User user;
-  final AuthToken token;
+  final String accessToken;
+  final String refreshToken;
+  final int expiresIn;
 
   AuthResponse({
     required this.user,
-    required this.token,
+    required this.accessToken,
+    required this.refreshToken,
+    required this.expiresIn,
   });
 
+  AuthToken get token => AuthToken(
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+        expiresIn: expiresIn,
+      );
+
   factory AuthResponse.fromJson(Map<String, dynamic> json) {
+    // Trường hợp API trả về user và token tách biệt
+    if (json.containsKey('user') && json.containsKey('token')) {
+      return AuthResponse(
+        user: User.fromJson(json['user']),
+        accessToken: json['token']['access_token'] ?? '',
+        refreshToken: json['token']['refresh_token'] ?? '',
+        expiresIn: json['token']['expires_in'] ?? 0,
+      );
+    }
+
+    // Trường hợp API trả về như mẫu JSON đã cung cấp
     return AuthResponse(
       user: User.fromJson(json['user']),
-      token: AuthToken.fromJson(json['token']),
+      accessToken: json['access_token'] ?? '',
+      refreshToken: json['refresh_token'] ?? '',
+      expiresIn: json['expires_in'] ?? 0,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'user': user.toJson(),
-      'token': token.toJson(),
+      'access_token': accessToken,
+      'refresh_token': refreshToken,
+      'expires_in': expiresIn,
     };
   }
 }

@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'core/routes/app_router.dart';
 import 'core/dependency_injection/locator.dart';
+import 'core/config/env_config.dart';
 import 'features/auth/controllers/auth_controller.dart';
 
 void main() async {
   // Ensure Flutter binding is initialized
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize environment configuration
+  await EnvConfig().initialize();
 
   // Setup dependency injection
   await setupLocator();
@@ -22,7 +26,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => locator<AuthController>(),
       child: MaterialApp(
-        title: 'Brainy',
+        title: EnvConfig().appName,
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),

@@ -14,13 +14,15 @@ class ApiResponse<T> {
   });
 
   factory ApiResponse.fromJson(
-      Map<String, dynamic> json, T? Function(dynamic) fromJsonT) {
+      Map<String, dynamic> json, T Function(dynamic) fromJsonT) {
+    final data = json.containsKey('data') ? json['data'] : json;
+
     return ApiResponse(
-      status: json['status'] ?? '',
+      status: json['status'] ?? 'error',
       code: json['code'] ?? 0,
       success: json['success'] ?? false,
       message: json['message'] ?? '',
-      data: json['data'] != null ? fromJsonT(json['data']) : null,
+      data: fromJsonT(data),
     );
   }
 

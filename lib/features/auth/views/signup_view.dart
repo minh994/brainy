@@ -3,6 +3,10 @@ import 'package:provider/provider.dart';
 import '../../../core/routes/app_router.dart';
 import '../controllers/auth_controller.dart';
 import '../../../core/widgets/logo.dart';
+import '../components/auth_text_field.dart';
+import '../components/auth_submit_button.dart';
+import '../components/auth_redirect_text.dart';
+import '../components/error_message.dart';
 
 class SignupView extends StatefulWidget {
   const SignupView({super.key});
@@ -53,12 +57,9 @@ class _SignupViewState extends State<SignupView> {
                 key: _formKey,
                 child: Column(
                   children: [
-                    TextFormField(
+                    AuthTextField(
                       controller: _nameController,
-                      decoration: const InputDecoration(
-                        labelText: 'Full Name',
-                        border: OutlineInputBorder(),
-                      ),
+                      labelText: 'Full Name',
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your name';
@@ -67,12 +68,9 @@ class _SignupViewState extends State<SignupView> {
                       },
                     ),
                     const SizedBox(height: 16),
-                    TextFormField(
+                    AuthTextField(
                       controller: _usernameController,
-                      decoration: const InputDecoration(
-                        labelText: 'Username',
-                        border: OutlineInputBorder(),
-                      ),
+                      labelText: 'Username',
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter a username';
@@ -84,12 +82,9 @@ class _SignupViewState extends State<SignupView> {
                       },
                     ),
                     const SizedBox(height: 16),
-                    TextFormField(
+                    AuthTextField(
                       controller: _emailController,
-                      decoration: const InputDecoration(
-                        labelText: 'Email Address',
-                        border: OutlineInputBorder(),
-                      ),
+                      labelText: 'Email Address',
                       keyboardType: TextInputType.emailAddress,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -102,12 +97,9 @@ class _SignupViewState extends State<SignupView> {
                       },
                     ),
                     const SizedBox(height: 16),
-                    TextFormField(
+                    AuthTextField(
                       controller: _passwordController,
-                      decoration: const InputDecoration(
-                        labelText: 'Password',
-                        border: OutlineInputBorder(),
-                      ),
+                      labelText: 'Password',
                       obscureText: true,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -120,12 +112,9 @@ class _SignupViewState extends State<SignupView> {
                       },
                     ),
                     const SizedBox(height: 16),
-                    TextFormField(
+                    AuthTextField(
                       controller: _confirmPasswordController,
-                      decoration: const InputDecoration(
-                        labelText: 'Confirm Password',
-                        border: OutlineInputBorder(),
-                      ),
+                      labelText: 'Confirm Password',
                       obscureText: true,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -140,49 +129,33 @@ class _SignupViewState extends State<SignupView> {
                     const SizedBox(height: 24),
                     Consumer<AuthController>(
                       builder: (context, auth, child) {
-                        if (auth.status == AuthStatus.authenticating) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-
                         return Column(
                           children: [
-                            if (auth.status == AuthStatus.error &&
-                                auth.errorMessage != null)
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 16),
-                                child: Text(
-                                  auth.errorMessage!,
-                                  style: const TextStyle(color: Colors.red),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            SizedBox(
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  if (_formKey.currentState!.validate()) {
-                                    final success = await auth.register(
-                                      _usernameController.text,
-                                      _emailController.text,
-                                      _passwordController.text,
-                                      _nameController.text,
-                                    );
-                                    if (success && mounted) {
-                                      AppRouter.navigateToReplacement(
-                                          context, AppRouter.home);
-                                    }
+                            ErrorMessage(
+                              errorMessage: auth.status == AuthStatus.error
+                                  ? auth.errorMessage
+                                  : null,
+                            ),
+                            AuthSubmitButton(
+                              text: 'Sign Up',
+                              isLoading:
+                                  auth.status == AuthStatus.authenticating,
+                              backgroundColor: Colors.blue,
+                              foregroundColor: Colors.white,
+                              onPressed: () async {
+                                if (_formKey.currentState!.validate()) {
+                                  final success = await auth.register(
+                                    _usernameController.text,
+                                    _emailController.text,
+                                    _passwordController.text,
+                                    _nameController.text,
+                                  );
+                                  if (success && mounted) {
+                                    AppRouter.navigateToReplacement(
+                                        context, AppRouter.home);
                                   }
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.blue,
-                                  foregroundColor: Colors.white,
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 16),
-                                ),
-                                child: const Text('Sign Up'),
-                              ),
+                                }
+                              },
                             ),
                           ],
                         );
@@ -192,17 +165,12 @@ class _SignupViewState extends State<SignupView> {
                 ),
               ),
               const SizedBox(height: 24),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text("Already have an account?"),
-                  TextButton(
-                    onPressed: () {
-                      AppRouter.navigateToReplacement(context, AppRouter.login);
-                    },
-                    child: const Text('Log In'),
-                  ),
-                ],
+              AuthRedirectText(
+                text: "Already have an account?",
+                linkText: 'Log In',
+                onPressed: () {
+                  AppRouter.navigateToReplacement(context, AppRouter.login);
+                },
               ),
               const SizedBox(height: 40),
             ],
