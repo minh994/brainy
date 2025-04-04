@@ -21,10 +21,14 @@ lib/
   ├── features/                 # Feature modules
   │   ├── auth/                 # Authentication feature
   │   │   ├── controllers/      # Controllers for managing state
+  │   │   ├── components/       # Auth-specific UI components
   │   │   ├── viewmodels/       # ViewModels for UI logic
   │   │   └── views/            # UI components
   │   ├── home/                 # Home feature
   │   └── vocabulary/           # Vocabulary feature
+  │       ├── models/           # Vocabulary-specific models
+  │       ├── viewmodels/       # ViewModels for vocabulary features
+  │       └── views/            # Vocabulary UI components
   └── main.dart                 # Application entry point
 ```
 
@@ -58,11 +62,59 @@ A foundational class that provides common functionality for all ViewModels:
 - Error handling
 - Safe disposal of resources
 
+```dart
+// Core functionality in BaseViewModel
+class BaseViewModel extends ChangeNotifier {
+  bool _isBusy = false;
+  bool _hasError = false;
+  String? _errorMessage;
+
+  bool get isBusy => _isBusy;
+  bool get hasError => _hasError;
+  String? get errorMessage => _errorMessage;
+
+  void setBusy(bool value) {
+    _isBusy = value;
+    notifyListeners();
+  }
+
+  void setError(String? message) {
+    _hasError = message != null;
+    _errorMessage = message;
+    notifyListeners();
+  }
+}
+```
+
 ### BaseView
 A wrapper widget that:
 - Creates and provides a ViewModel to the UI
 - Manages the ViewModel lifecycle
 - Uses Provider to rebuild the UI when the ViewModel changes
+
+```dart
+// Example usage of BaseView
+BaseView<SignupViewModel>(
+  viewModelBuilder: () => locator<SignupViewModel>(),
+  builder: (context, model, child) {
+    return Scaffold(
+      // UI that reacts to model properties
+      body: model.isBusy 
+        ? LoadingIndicator() 
+        : SignupForm(model: model),
+    );
+  },
+)
+```
+
+### Authentication Flow
+The application implements a token-based authentication flow:
+1. User registers or logs in via the API
+2. For login, tokens are received and stored securely
+3. For signup, no tokens are provided, so user is redirected to login
+4. Token refresh is handled automatically when tokens expire
+5. Authenticated requests include the access token
+6. User state is preserved for persistent login
 
 ### Service Locator
 - Centralized dependency management using `locator.dart`
@@ -84,4 +136,6 @@ A wrapper widget that:
 3. Business logic lives in repositories and ViewModels
 4. Navigation is centralized in AppRouter
 5. Error handling is consistent across the application
-6. Service dependencies are explicit through constructor injection 
+6. Service dependencies are explicit through constructor injection
+7. Viewmodels should be focused on a single responsibility
+8. Views should use the BaseView pattern for lifecycle management 

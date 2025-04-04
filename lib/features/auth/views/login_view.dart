@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import '../../../core/base/base_view.dart';
-import '../../../core/widgets/busy_indicator.dart';
 import '../../../core/dependency_injection/locator.dart';
+import '../../../core/routes/app_router.dart';
 import '../viewmodels/login_view_model.dart';
+import '../components/auth_text_field.dart';
+import '../components/auth_submit_button.dart';
+import '../components/auth_redirect_text.dart';
+import '../components/error_message.dart';
+import '../components/social_login_buttons.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -58,13 +63,10 @@ class _LoginViewState extends State<LoginView> {
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 48),
-                      TextFormField(
+                      AuthTextField(
                         controller: _usernameController,
-                        decoration: const InputDecoration(
-                          labelText: 'Username',
-                          prefixIcon: Icon(Icons.person),
-                          border: OutlineInputBorder(),
-                        ),
+                        labelText: 'Username',
+                        prefixIcon: const Icon(Icons.person),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your username';
@@ -73,13 +75,10 @@ class _LoginViewState extends State<LoginView> {
                         },
                       ),
                       const SizedBox(height: 16),
-                      TextFormField(
+                      AuthTextField(
                         controller: _passwordController,
-                        decoration: const InputDecoration(
-                          labelText: 'Password',
-                          prefixIcon: Icon(Icons.lock),
-                          border: OutlineInputBorder(),
-                        ),
+                        labelText: 'Password',
+                        prefixIcon: const Icon(Icons.lock),
                         obscureText: true,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -92,108 +91,44 @@ class _LoginViewState extends State<LoginView> {
                         },
                       ),
                       const SizedBox(height: 24),
-                      if (model.hasError)
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 16.0),
-                          child: Text(
-                            model.errorMessage ?? 'An error occurred',
-                            style: const TextStyle(
-                              color: Colors.red,
-                              fontSize: 14,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ElevatedButton(
-                        onPressed: model.isBusy
-                            ? null
-                            : () async {
-                                if (_formKey.currentState?.validate() ??
-                                    false) {
-                                  final success = await model.login(
-                                    _usernameController.text,
-                                    _passwordController.text,
-                                  );
+                      ErrorMessage(
+                          errorMessage:
+                              model.hasError ? model.errorMessage : null),
+                      AuthSubmitButton(
+                        text: 'Login',
+                        isLoading: model.isBusy,
+                        onPressed: () async {
+                          if (_formKey.currentState?.validate() ?? false) {
+                            final success = await model.login(
+                              _usernameController.text,
+                              _passwordController.text,
+                            );
 
-                                  if (success && mounted) {
-                                    Navigator.of(context)
-                                        .pushReplacementNamed('/home');
-                                  }
-                                }
-                              },
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        child: model.isBusy
-                            ? const BusyIndicator(size: 24)
-                            : const Text('Login'),
+                            if (success && mounted) {
+                              AppRouter.navigateToReplacement(
+                                  context, AppRouter.home);
+                            }
+                          }
+                        },
                       ),
                       const SizedBox(height: 24),
-                      const Row(
-                        children: [
-                          Expanded(child: Divider()),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16),
-                            child: Text('or'),
-                          ),
-                          Expanded(child: Divider()),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: OutlinedButton.icon(
-                              icon: const Icon(Icons.login),
-                              label: const Text('Google'),
-                              onPressed: model.isBusy
-                                  ? null
-                                  : () async {
-                                      await model.loginWithGoogle();
-                                    },
-                              style: OutlinedButton.styleFrom(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 12),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: OutlinedButton.icon(
-                              icon: const Icon(Icons.facebook),
-                              label: const Text('Facebook'),
-                              onPressed: model.isBusy
-                                  ? null
-                                  : () async {
-                                      await model.loginWithFacebook();
-                                    },
-                              style: OutlinedButton.styleFrom(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 12),
-                              ),
-                            ),
-                          ),
-                        ],
+                      SocialLoginButtons(
+                        isLoading: model.isBusy,
+                        onGooglePressed: () async {
+                          await model.loginWithGoogle();
+                        },
+                        onFacebookPressed: () async {
+                          await model.loginWithFacebook();
+                        },
                       ),
                       const SizedBox(height: 24),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text("Don't have an account?"),
-                          TextButton(
-                            onPressed: model.isBusy
-                                ? null
-                                : () {
-                                    Navigator.of(context).pushNamed(
-                                      model.getSignupRoute(),
-                                    );
-                                  },
-                            child: const Text('Sign up'),
-                          ),
-                        ],
+                      AuthRedirectText(
+                        text: "Don't have an account?",
+                        linkText: 'Sign up',
+                        isLoading: model.isBusy,
+                        onPressed: () {
+                          AppRouter.navigateTo(context, model.getSignupRoute());
+                        },
                       ),
                     ],
                   ),

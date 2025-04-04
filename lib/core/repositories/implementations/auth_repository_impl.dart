@@ -67,18 +67,24 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<ApiResponse<AuthToken>> refreshToken(String refreshToken) async {
     try {
-      final response = await apiClient.post<AuthToken>(
+      final response = await apiClient.post<Map<String, dynamic>>(
         '/auth/refresh',
         {'refresh_token': refreshToken},
-        (json) => AuthToken.fromJson(json),
+        (json) => json,
         requiresAuth: false,
       );
 
       if (response.success && response.data != null) {
-        await saveToken(response.data!);
+        final token = AuthToken(
+          accessToken: response.data!['access_token'] ?? '',
+          refreshToken: response.data!['refresh_token'] ?? '',
+          expiresIn: response.data!['expires_in'] ?? 0,
+        );
+        await saveToken(token);
+        return ApiResponse.success(data: token);
       }
 
-      return response;
+      return ApiResponse.error(message: response.message);
     } catch (e) {
       return ApiResponse.error(message: e.toString());
     }
