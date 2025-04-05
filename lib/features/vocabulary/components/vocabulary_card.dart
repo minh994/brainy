@@ -5,14 +5,16 @@ class VocabularyCard extends StatefulWidget {
   final Word word;
   final VoidCallback? onSkip;
   final VoidCallback? onLearn;
-  final VoidCallback? onAudioTap;
+  final VoidCallback? onAudioTapPhonetic;
+  final VoidCallback? onAudioTapPhoneticAm;
 
   const VocabularyCard({
     Key? key,
     required this.word,
     this.onSkip,
     this.onLearn,
-    this.onAudioTap,
+    this.onAudioTapPhonetic,
+    this.onAudioTapPhoneticAm,
   }) : super(key: key);
 
   @override
@@ -72,25 +74,85 @@ class _VocabularyCardState extends State<VocabularyCard> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   // Word
-                  Text(
-                    widget.word.word,
-                    style: const TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
+                  const SizedBox(height: 24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        widget.word.word,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 8),
-
+                  const SizedBox(height: 5),
                   // Phonetic
                   if (widget.word.phoneticText != null)
-                    Text(
-                      widget.word.phoneticText!,
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.grey[600],
-                      ),
-                      textAlign: TextAlign.center,
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.blueAccent,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: InkWell(
+                            onTap: widget.onAudioTapPhonetic,
+                            borderRadius: BorderRadius.circular(8),
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 5, vertical: 5),
+                              child: Icon(Icons.volume_up,
+                                  size: 18, color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                          widget.word.phoneticText!,
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
+                    ),
+                  const SizedBox(height: 5),
+                  if (widget.word.phoneticAmText != null)
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.redAccent,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: InkWell(
+                            onTap: widget.onAudioTapPhoneticAm,
+                            borderRadius: BorderRadius.circular(8),
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 5, vertical: 5),
+                              child: Icon(Icons.volume_up,
+                                  size: 18, color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                          widget.word.phoneticAmText!,
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.grey[600],
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
                     ),
                   const SizedBox(height: 24),
 
@@ -99,7 +161,7 @@ class _VocabularyCardState extends State<VocabularyCard> {
                     Text(
                       currentSense!.definition,
                       style: const TextStyle(
-                        fontSize: 28,
+                        fontSize: 13,
                         fontWeight: FontWeight.w500,
                       ),
                       textAlign: TextAlign.center,
@@ -116,7 +178,7 @@ class _VocabularyCardState extends State<VocabularyCard> {
                         children: [
                           ExampleItem(
                             example: currentExample!.x,
-                            onAudioTap: widget.onAudioTap,
+                            onAudioTap: widget.onAudioTapPhonetic,
                           ),
                         ],
                       ),
@@ -133,10 +195,6 @@ class _VocabularyCardState extends State<VocabularyCard> {
                   icon: const Icon(Icons.arrow_back),
                   label: const Text('Skip'),
                   onPressed: widget.onSkip,
-                ),
-                IconButton(
-                  icon: const Icon(Icons.volume_up, size: 32),
-                  onPressed: widget.onAudioTap,
                 ),
                 TextButton.icon(
                   icon: const Icon(Icons.arrow_forward),
@@ -162,7 +220,11 @@ class _VocabularyCardState extends State<VocabularyCard> {
         ),
       ),
       onPressed: () {},
-      child: Text(text),
+      child: Text(text,
+          style: const TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w500,
+          )),
     );
   }
 }
@@ -180,16 +242,11 @@ class ExampleItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: const Icon(Icons.arrow_drop_down),
       title: Text(
         example,
         style: const TextStyle(
-          fontSize: 16,
+          fontSize: 11,
         ),
-      ),
-      trailing: IconButton(
-        icon: const Icon(Icons.volume_up),
-        onPressed: onAudioTap,
       ),
     );
   }

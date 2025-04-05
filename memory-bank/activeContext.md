@@ -1,70 +1,61 @@
 # Active Context
 
 ## Current Focus
-We are implementing the MVVM architecture for the Brainy Flutter app. The main goals are:
-1. Establish a clean, maintainable architecture
-2. Create reusable base classes for views and view models
-3. Setup proper dependency injection
-4. Implement authentication flow with proper error handling
+We are enhancing the user experience and functionality of the Brainy Flutter app, with focus on:
+1. Improving the Dictionary view with advanced filtering and part of speech visualization
+2. Adding audio playback functionality for pronunciation
+3. Creating a comprehensive Settings screen
+4. Optimizing API integration with proper error handling
 
 ## Recent Changes
-- Created `BaseViewModel` class to standardize view model behavior
-- Created `BaseView` widget to manage the view/view model lifecycle
-- Implemented `BusyIndicator` for consistent loading states
-- Set up GetIt service locator for dependency injection
-- Fixed shared_preferences implementation to prevent MissingPluginException
-- Removed duplicate code and unified the services structure
-- Added a username field to the signup form
-- Refactored SignupView to use the BaseView pattern
-- Created a dedicated SignupViewModel to handle registration logic
-- Fixed authentication flow to redirect to login after successful signup (since API doesn't return tokens on signup)
+- Implemented a word status filtering system using an enum-based approach
+- Added color-coded part of speech indicators (noun, verb, adjective) in the Dictionary view
+- Created a Settings screen with theme, language, notification, and learning preferences
+- Integrated the just_audio package for word pronunciation
+- Updated API response handling for nested JSON structures
+- Improved filter chip UI with better visual feedback for active state
+- Enhanced error handling with detailed logging
+- Optimized the dictionary word item layout with cleaner design
 
 ## Active Decisions
-- Using MVVM pattern over other architectures because:
-  - Clear separation of UI and business logic
-  - Testability of view models
-  - Consistent state management
-  - Reusability of components
+- Using color-coding for parts of speech (POS):
+  - Noun: Purple
+  - Verb: Blue
+  - Adjective: Green
+  - Other parts of speech have distinct colors for quick identification
 
-- Using repository pattern for data access:
-  - Abstracts data source implementation details
-  - Allows for easier testing with mock data
-  - Provides a clean interface for view models
+- Using WordStatus enum for standardization:
+  - Provides type safety
+  - Ensures consistent status names
+  - Simplifies filtering logic
 
-- Implementing a service locator with GetIt:
-  - Efficient dependency injection
-  - Avoids passing dependencies through constructors
-  - Provides both singletons and factory instances
+- Implementing separate API calls for status counts:
+  - More network requests but better separation of concerns
+  - Makes error handling more granular
+  - Allows for independent updates of counts
 
-- Signup flow redirect to login:
-  - Current API design doesn't return auth tokens on signup
-  - User must explicitly log in after registration
-  - Shows a success dialog before redirecting to login
+- Using just_audio for pronunciation:
+  - Cross-platform compatibility
+  - Simple API
+  - Support for streaming audio
+
+- Settings design choices:
+  - Organized by category (Appearance, Language, Sound, etc.)
+  - Using shared_preferences for persistence
+  - Immediate application of settings when changed
 
 ## Technical Debt
-- Some duplicate service implementations (now cleaned up)
-- Need to add comprehensive error handling
-- Need to implement proper loading states in all views
-- Should add unit tests for view models
+- Audio playback needs more robust error handling
+- Need to add handling for network connectivity issues
+- Potential optimization for API calls (batch requests)
+- Need for comprehensive unit tests for view models
 - Consider implementing more robust state management if needed
 
 ## Next Steps
-1. Complete the authentication flow
-   - Add token refresh mechanism
-   - Implement auto-login on app start
-   - Add logout functionality with token invalidation
-
-2. Create vocabulary feature
-   - Implement vocabulary list view
-   - Add vocabulary detail view
-   - Connect to API endpoints
-
-3. Enhance UI components
-   - Standardize form fields
-   - Create a consistent theme
-   - Add animation transitions
-
-4. Add unit and widget tests
-   - Test view models
-   - Test repositories
-   - Test critical UI components 
+1. Improve performance of the Dictionary view with virtualized lists
+2. Add search history and favorites functionality
+3. Implement word learning progress tracking
+4. Create more interactive learning exercises
+5. Add offline mode with data caching
+6. Enhance accessibility features
+7. Implement user analytics to track learning progress 

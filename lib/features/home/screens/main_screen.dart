@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../views/home_view.dart';
 import '../../dictionary/views/dictionary_view.dart';
+import '../../settings/views/settings_view.dart';
+import '../../grammar/views/grammar_view.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -16,7 +18,8 @@ class _MainScreenState extends State<MainScreen> {
     const HomeView(),
     const DictionaryView(),
     const Center(child: Text('Statistics Coming Soon')),
-    const Center(child: Text('Settings Coming Soon')),
+    const GrammarView(),
+    const SettingsView(),
   ];
 
   @override
@@ -44,6 +47,10 @@ class _MainScreenState extends State<MainScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.insert_chart),
             label: 'Statistic',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.book),
+            label: 'Grammar',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),

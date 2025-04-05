@@ -29,4 +29,14 @@ abstract class WordRepository {
   /// Lấy danh sách từ vựng có phân trang
   Future<ApiResponse<List<Word>>> getWordsPaginated(
       {int page = 1, int limit = 10});
+
+  /// Lấy danh sách từ vựng theo trạng thái học
+  Future<ApiResponse<List<Word>>> getWordsByStatus(
+      {required String status, int page = 1, int limit = 10});
+
+  /// Cập nhật trạng thái học của từ
+  Future<ApiResponse<void>> updateWordStatus({
+    required String wordId,
+    required String status,
+  });
 }

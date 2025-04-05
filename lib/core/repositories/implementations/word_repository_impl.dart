@@ -115,4 +115,69 @@ class WordRepositoryImpl implements WordRepository {
       },
     );
   }
+
+  @override
+  Future<ApiResponse<List<Word>>> getWordsByStatus(
+      {required String status, int page = 1, int limit = 10}) async {
+    final apiResponse = await _apiClient.get<Map<String, dynamic>>(
+      '/learn/status?status=$status&page=$page&limit=$limit',
+      (json) => json is Map<String, dynamic> ? json : <String, dynamic>{},
+    );
+
+    if (!apiResponse.success || apiResponse.data == null) {
+      return ApiResponse.error(
+        code: apiResponse.code,
+        message: apiResponse.message,
+      );
+    }
+
+    try {
+      final responseData = apiResponse.data!;
+
+      // Extract learn data
+      if (responseData.containsKey('learn') && responseData['learn'] is Map) {
+        final learnData = responseData['learn'] as Map<String, dynamic>;
+        final total = learnData['total'] as int? ?? 0;
+        final items = learnData['items'] as List? ?? [];
+
+        final words = items.map((item) => Word.fromJson(item)).toList();
+
+        return ApiResponse.success(
+          data: words,
+          totalCount: total,
+          message: apiResponse.message,
+          code: apiResponse.code,
+        );
+      }
+
+      // Default fallback
+      return ApiResponse.success(
+        data: <Word>[],
+        totalCount: 0,
+        message: apiResponse.message,
+        code: apiResponse.code,
+      );
+    } catch (e) {
+      return ApiResponse.error(
+        message: 'Error parsing response: $e',
+      );
+    }
+  }
+
+  @override
+  Future<ApiResponse<void>> updateWordStatus({
+    required String wordId,
+    required String status,
+  }) async {
+    final body = {
+      'word_id': wordId,
+      'status': status,
+    };
+
+    return await _apiClient.post<void>(
+      '/learn',
+      body,
+      (_) {}, // No data conversion needed for void return type
+    );
+  }
 }

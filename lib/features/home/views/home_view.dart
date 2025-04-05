@@ -15,6 +15,7 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   final CardSwiperController _cardController = CardSwiperController();
+  int _currentIndex = 0;
 
   @override
   void dispose() {
@@ -22,15 +23,34 @@ class _HomeViewState extends State<HomeView> {
     super.dispose();
   }
 
-  void _onSkip() {
+  void _onSkip(HomeViewModel model) {
+    // Get current word and update its status
+    if (_currentIndex < model.words.length) {
+      final currentWord = model.words[_currentIndex];
+      model.setWordSkipped(currentWord.id);
+
+      // Show feedback to user
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Word skipped')),
+      );
+    }
+
     // Swipe the card manually to the left
     _cardController.swipe(CardSwiperDirection.left);
   }
 
-  void _onLearn() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Adding word to learning list...')),
-    );
+  void _onLearn(HomeViewModel model) {
+    // Get current word and update its status
+    if (_currentIndex < model.words.length) {
+      final currentWord = model.words[_currentIndex];
+      model.setWordLearning(currentWord.id);
+
+      // Show feedback to user
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Added to learning list')),
+      );
+    }
+
     // Swipe the card manually to the right
     _cardController.swipe(CardSwiperDirection.right);
   }
@@ -74,17 +94,36 @@ class _HomeViewState extends State<HomeView> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              const SizedBox(height: 20),
+              const SizedBox(height: 50),
               Expanded(
                 child: CardSwiper(
                   controller: _cardController,
                   cardsCount: model.words.length,
                   onSwipe: (previousIndex, currentIndex, direction) {
-                    // Handle card swipe
+                    // Update current index
+                    if (currentIndex != null) {
+                      _currentIndex = currentIndex;
+                    }
+
+                    // Handle end of cards
                     if (currentIndex == null) {
                       // All cards have been swiped
                       model.loadMoreWords();
                     }
+
+                    // Update word status based on swipe direction if not handled by buttons
+                    if (previousIndex < model.words.length) {
+                      final swipedWord = model.words[previousIndex];
+
+                      if (direction == CardSwiperDirection.left) {
+                        // Left swipe - mark as skipped if not already handled by button
+                        // model.setWordSkipped(swipedWord.id);
+                      } else if (direction == CardSwiperDirection.right) {
+                        // Right swipe - mark as learning if not already handled by button
+                        // model.setWordLearning(swipedWord.id);
+                      }
+                    }
+
                     return true;
                   },
                   numberOfCardsDisplayed: 3,
@@ -95,9 +134,11 @@ class _HomeViewState extends State<HomeView> {
                     final word = model.words[index];
                     return VocabularyCard(
                       word: word,
-                      onSkip: _onSkip,
-                      onLearn: _onLearn,
-                      onAudioTap: model.playAudio,
+                      onSkip: () => _onSkip(model),
+                      onLearn: () => _onLearn(model),
+                      onAudioTapPhonetic: () => model.playAudio(word.phonetic),
+                      onAudioTapPhoneticAm: () =>
+                          model.playAudio(word.phoneticAm),
                     );
                   },
                 ),

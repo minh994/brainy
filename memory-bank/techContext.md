@@ -8,6 +8,11 @@
 - **Provider**: State management using InheritedWidgets
 - **Get_It**: Dependency injection service locator
 
+### Media & UI
+- **just_audio**: Audio playback for pronunciation
+- **flutter_card_swiper**: Card swiping functionality for vocabulary learning
+- **google_fonts**: Custom font integration
+
 ### Persistence
 - **shared_preferences**: Lightweight key-value storage
 - **REST API**: Backend communication
@@ -15,6 +20,7 @@
 ### Key Dependencies
 - **http**: HTTP requests and API communication
 - **provider**: ChangeNotifier-based state management
+- **flutter_dotenv**: Environment configuration management
 
 ## Development Environment
 
@@ -34,6 +40,7 @@
 - **BaseViewModel**: Abstract ViewModel base class with common functionality
 - **BaseView**: State management wrapper for widgets
 - **BusyIndicator**: Standardized loading indicator
+- **WordStatus**: Enum for word learning status
 
 ### Authentication
 - Token-based authentication
@@ -44,11 +51,31 @@
 - RESTful API communication
 - Generic response handling
 - Error handling and retries
+- Nested JSON structure parsing
 
 ### Storage Services
 - Secure credential storage
 - User preferences
 - App state persistence
+
+### Media Services
+- Audio playback with just_audio
+- Resource management and disposal
+- Error handling for media playback
+
+## Feature Components
+
+### Dictionary
+- Status-based filtering
+- Part of speech visualization
+- Search functionality
+- API integration
+
+### Settings
+- Theme management
+- Language selection
+- Notification preferences
+- Learning goals configuration
 
 ## Code Conventions
 
@@ -100,4 +127,5 @@
 - Minimize rebuilds
 - Lazy loading for large datasets
 - Image optimization
-- Memory management for disposable resources 
+- Memory management for disposable resources
+- Audio resource disposal 

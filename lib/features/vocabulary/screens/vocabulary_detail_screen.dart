@@ -146,7 +146,7 @@ class _VocabularyDetailScreenState extends State<VocabularyDetailScreen> {
         word: _word!,
         onSkip: _onSkip,
         onLearn: _onLearn,
-        onAudioTap: _playAudio,
+        onAudioTapPhonetic: _playAudio,
       ),
     );
   }

@@ -9,6 +9,7 @@ lib/
   ├── core/
   │   ├── base/                 # Base classes (BaseView, BaseViewModel)
   │   ├── dependency_injection/ # Service locator using get_it
+  │   ├── enums/                # Application-wide enumerations
   │   ├── models/               # Data models
   │   ├── repositories/         # Repository pattern implementations
   │   │   ├── abstract/         # Repository interfaces
@@ -25,8 +26,14 @@ lib/
   │   │   ├── viewmodels/       # ViewModels for UI logic
   │   │   └── views/            # UI components
   │   ├── home/                 # Home feature
+  │   ├── dictionary/           # Dictionary feature
+  │   │   ├── viewmodels/       # Dictionary ViewModels
+  │   │   └── views/            # Dictionary UI components
+  │   ├── settings/             # Settings feature
+  │   │   ├── viewmodels/       # Settings ViewModels
+  │   │   └── views/            # Settings UI components  
   │   └── vocabulary/           # Vocabulary feature
-  │       ├── models/           # Vocabulary-specific models
+  │       ├── components/       # Word-specific UI components
   │       ├── viewmodels/       # ViewModels for vocabulary features
   │       └── views/            # Vocabulary UI components
   └── main.dart                 # Application entry point
@@ -53,6 +60,16 @@ lib/
 - Implemented via Flutter's ChangeNotifier and Provider package.
 - ViewModels extend BaseViewModel which extends ChangeNotifier.
 - UI components listen to changes in the ViewModel and rebuild when needed.
+
+### 5. Enum-Based Standardization
+- Using enums for type-safe value selection (e.g., WordStatus)
+- Provides consistent values across the application
+- Simplifies UI logic with enum-driven rendering
+
+### 6. Filter Pattern
+- Implemented in Dictionary view using status-based filtering
+- Allows for dynamic filtering of data based on selected criteria
+- Combines well with search functionality
 
 ## Key Components
 
@@ -116,6 +133,27 @@ The application implements a token-based authentication flow:
 5. Authenticated requests include the access token
 6. User state is preserved for persistent login
 
+### Dictionary Feature
+The Dictionary feature implements:
+1. Status-based filtering using WordStatus enum
+2. Part of speech visualization with color coding
+3. Search functionality across words and definitions
+4. Efficient API integration with the repository pattern
+
+### Settings Feature
+The Settings feature provides:
+1. User preferences management (theme, language, notifications)
+2. Learning configuration (daily goals)
+3. Data management (clearing user data)
+4. Persistent storage using shared_preferences
+
+### Audio Playback
+The audio playback functionality:
+1. Uses just_audio for cross-platform compatibility
+2. Creates separate player instances to avoid conflicts
+3. Handles errors gracefully
+4. Properly disposes resources
+
 ### Service Locator
 - Centralized dependency management using `locator.dart`
 - Handles initialization of services, repositories, controllers, and ViewModels
@@ -124,6 +162,7 @@ The application implements a token-based authentication flow:
 - BrainyApiClient handles HTTP requests with proper error handling
 - Supports authentication with token management
 - Generic response parsing
+- Handles nested JSON structures
 
 ### Local Storage
 - SharedPrefsStorage provides a consistent interface for data persistence
@@ -138,4 +177,6 @@ The application implements a token-based authentication flow:
 5. Error handling is consistent across the application
 6. Service dependencies are explicit through constructor injection
 7. Viewmodels should be focused on a single responsibility
-8. Views should use the BaseView pattern for lifecycle management 
+8. Views should use the BaseView pattern for lifecycle management
+9. Enums should be used for type-safe value selection
+10. Colors and styles should be consistent throughout the application 

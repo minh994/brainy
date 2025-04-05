@@ -5,6 +5,12 @@ import '../../features/vocabulary/viewmodels/vocabulary_list_view_model.dart';
 import '../../features/auth/viewmodels/signup_view_model.dart';
 import '../../features/home/viewmodels/home_view_model.dart';
 import '../../features/dictionary/viewmodels/dictionary_view_model.dart';
+import '../../features/settings/viewmodels/settings_view_model.dart';
+import '../../features/grammar/repositories/abstract/grammar_repository.dart';
+import '../../features/grammar/repositories/implementations/grammar_repository_impl.dart';
+import '../../features/grammar/viewmodels/grammar_list_view_model.dart';
+import '../../features/grammar/viewmodels/category_detail_view_model.dart';
+import '../../features/grammar/viewmodels/lesson_detail_view_model.dart';
 import '../repositories/abstract/auth_repository.dart';
 import '../repositories/implementations/auth_repository_impl.dart';
 import '../repositories/abstract/word_repository.dart';
@@ -51,6 +57,10 @@ Future<void> setupLocator() async {
     () => WordRepositoryImpl(apiClient: locator<BrainyApiClient>()),
   );
 
+  locator.registerLazySingleton<GrammarRepository>(
+    () => GrammarRepositoryImpl(apiClient: locator<BrainyApiClient>()),
+  );
+
   // Controllers
   locator.registerFactory<AuthController>(
     () => AuthController(
@@ -79,5 +89,23 @@ Future<void> setupLocator() async {
 
   locator.registerFactory(
     () => DictionaryViewModel(wordRepository: locator<WordRepository>()),
+  );
+
+  locator.registerFactory(
+    () => SettingsViewModel(),
+  );
+
+  // Grammar view models
+  locator.registerFactory(
+    () => GrammarListViewModel(grammarRepository: locator<GrammarRepository>()),
+  );
+
+  locator.registerFactory(
+    () => CategoryDetailViewModel(
+        grammarRepository: locator<GrammarRepository>()),
+  );
+
+  locator.registerFactory(
+    () => LessonDetailViewModel(),
   );
 }
