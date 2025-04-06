@@ -2,6 +2,10 @@
 
 A modern language learning application built with Flutter that focuses on vocabulary acquisition, grammar learning, and pronunciation practice.
 
+## App Showcase
+
+![Brainy App Mockup](mockup.png)
+
 ## Features
 
 ### Vocabulary Learning
