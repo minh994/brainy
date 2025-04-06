@@ -3,6 +3,7 @@ import '../views/home_view.dart';
 import '../../dictionary/views/dictionary_view.dart';
 import '../../settings/views/settings_view.dart';
 import '../../grammar/views/grammar_view.dart';
+import '../../learn/views/learn_view.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -17,7 +18,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _tabs = [
     const HomeView(),
     const DictionaryView(),
-    const Center(child: Text('Statistics Coming Soon')),
+    const LearnView(),
     const GrammarView(),
     const SettingsView(),
   ];
@@ -37,16 +38,16 @@ class _MainScreenState extends State<MainScreen> {
         },
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.school),
-            label: 'Learn',
+            icon: Icon(Icons.home),
+            label: 'Home',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.menu_book),
             label: 'Dictionary',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.insert_chart),
-            label: 'Statistic',
+            icon: Icon(Icons.school),
+            label: 'Learning',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.book),

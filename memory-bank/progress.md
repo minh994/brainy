@@ -63,6 +63,20 @@
 - ✅ Error handling for audio playback
 - ✅ Proper resource cleanup
 
+### Learning System
+- ✅ Learning view with list of words being learned
+- ✅ Flashcard learning mode
+  - ✅ Interactive card swiping
+  - ✅ Word/definition flip functionality
+  - ✅ Audio pronunciation in cards
+  - ✅ Learning progress tracking
+  - ✅ Completion screen with stats
+- ✅ Audio service integration for pronunciation
+
+### Home Screen
+- ✅ Dashboard with learning stats
+- ✅ Quick access to learning features
+
 ## In Progress
 
 ### Authentication Flow
@@ -81,6 +95,15 @@
 - 🔄 Progress tracking for completed lessons
 - 🔄 Offline caching for lesson content
 
+### Quiz Mode
+- 🔄 Quiz implementation for learning view
+- 🔄 Multiple choice questions
+- 🔄 Score tracking
+
+### User Profile
+- 🔄 User profile management
+- 🔄 Learning preferences
+
 ## Planned Features
 
 ### User Profile
@@ -98,6 +121,19 @@
 - ⏳ Achievements
 - ⏳ Daily challenges
 - ⏳ Performance analytics
+
+### Statistics and Tracking
+- ⏳ Learning performance analytics
+- ⏳ Spaced repetition algorithm
+- ⏳ Daily streak tracking
+
+### Advanced Learning
+- ⏳ Personalized learning paths
+- ⏳ Difficulty adaptation
+
+### Offline Mode
+- ⏳ Offline data storage
+- ⏳ Sync mechanism when online
 
 ## Known Issues
 - 🐛 MissingPluginException with SharedPreferences (fixed)
@@ -126,4 +162,19 @@ Our architecture has evolved from a simple MVC to a full MVVM implementation wit
 3. Add word learning progress tracking
 4. Enhance the grammar feature with interactive exercises
 5. Improve offline functionality with content caching
-6. Enhance UI/UX with animations and transitions 
+6. Enhance UI/UX with animations and transitions
+
+## Technical Debt & Improvements
+
+### Refactoring
+- 🔄 Extract all hardcoded strings to constants
+- 🔄 Improve error handling with more specific messages
+- ✅ Break down large widgets into smaller, focused components
+
+### Performance
+- ⏳ Optimize API calls with caching
+- ⏳ Lazy loading for large lists
+
+### Testing
+- 🔄 Increase unit test coverage
+- ⏳ Add integration tests for main user flows 

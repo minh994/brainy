@@ -1,5 +1,95 @@
 # System Patterns
 
+## Core Architecture
+This project follows an MVVM (Model-View-ViewModel) pattern with:
+
+- **Models**: Data structures like `Word`, `Sense`, and `Example`
+- **ViewModels**: Business logic classes that manage state and data
+- **Views**: UI components that render data from ViewModels
+
+## Feature Module Structure
+The app is organized into feature modules:
+
+1. **Auth Feature**
+   - Login/Signup
+   - Authentication state management
+
+2. **Dictionary Feature**
+   - Dictionary browsing
+   - Word details
+
+3. **Home Feature**
+   - Dashboard view
+   - Summary of learning progress
+
+4. **Vocabulary Feature**
+   - Vocabulary lists
+   - Vocabulary cards
+
+5. **Grammar Feature**
+   - Grammar lessons
+   - Categories and details
+
+6. **Learn Feature**
+   - Learning view showing words with "learning" status
+   - Flashcard learning mode with interactive card swiper
+   - Learning controls and completion screens
+
+## Component Architecture
+We've implemented a component-based architecture for UI elements:
+
+### Learning Feature Components
+The learning feature demonstrates our component architecture approach:
+
+1. **Container Components (Smart Components)**
+   - `LearnView`: Manages the list of learning words
+   - `LearningModeScreen`: Orchestrates the learning experience
+   
+2. **Presentational Components (Dumb Components)**
+   - `FlashcardWidget`: Displays the word card with flip functionality
+   - `CardSwiperWidget`: Handles card swiping interactions
+   - `LearningControls`: UI for control buttons
+   - `CompletionScreen`: Celebration UI when learning is complete
+
+### Component Communication
+- Parent-to-child: Props passed down to child components
+- Child-to-parent: Callbacks passed up through function parameters
+- Sibling-to-sibling: Through parent component or shared ViewModel
+
+## State Management
+- **BaseViewModel**: Foundation class for all ViewModels
+- **Service Locator**: Dependencies injected using GetIt
+- **Repository Pattern**: Data access abstracted through repository interfaces
+- **Audio Service**: Singleton service for managing audio playback
+- **Word Repository**: Manages word data and learning statuses
+
+## Navigation Patterns
+- **AppRouter**: Central router class for navigation
+- **Modal Bottom Sheets**: For auxiliary views like learning options and completion
+- **Dialogs**: For confirmations and alerts
+
+## UI Patterns
+- **Card Pattern**: Primary visual element for words
+- **Card Swipe Interaction**: Left/right swiping for learning decisions
+- **Flip Animation**: For toggling between word and definition
+- **Progress Indicators**: Linear indicator for learning progress
+- **Bottom Controls**: Consistent button layout for actions
+
+## Service Patterns
+1. **Repository Pattern**
+   - Abstract interfaces defined in `abstract/` folder
+   - Concrete implementations in `implementations/` folder
+   - Repositories provide data access to ViewModels
+
+2. **Service Locator Pattern**
+   - Central registration in `locator.dart`
+   - All dependencies registered with appropriate lifetime (singleton, factory)
+   - ViewModels access dependencies through locator
+
+3. **Audio Service**
+   - Singleton service for audio playback
+   - Manages audio state (playing, stopped)
+
 ## Architecture Overview
 The Brainy Flutter application follows the MVVM (Model-View-ViewModel) architecture pattern with a clean, layered structure. This ensures separation of concerns and makes the codebase maintainable, testable, and scalable.
 

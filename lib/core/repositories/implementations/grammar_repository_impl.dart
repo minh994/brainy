@@ -1,6 +1,6 @@
-import '../../../../core/models/api_response.dart';
-import '../../../../core/services/http/brainy_api_client.dart';
-import '../../models/category_model.dart';
+import '../../models/api_response.dart';
+import '../../services/http/brainy_api_client.dart';
+import '../../../features/grammar/models/category_model.dart';
 import '../abstract/grammar_repository.dart';
 
 class GrammarRepositoryImpl implements GrammarRepository {

@@ -231,19 +231,11 @@ class ExampleItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      leading: AudioButton(
-        onTap: onAudioTap ?? () {},
-        backgroundColor: Colors.blueAccent,
-        isPlaying: isPlayingAudio,
-        size: 16,
-      ),
-      title: Text(
-        example,
-        style: const TextStyle(
-          fontSize: 14,
-        ),
+    return Text(
+      example,
+      style: const TextStyle(
+        fontSize: 11,
+        fontFamily: 'Poppins',
       ),
     );
   }

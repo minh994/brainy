@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/base/base_view_model.dart';
 import '../../../core/models/api_response.dart';
 import '../models/category_model.dart';
-import '../repositories/abstract/grammar_repository.dart';
+import '../../../core/repositories/abstract/grammar_repository.dart';
 
 class GrammarListViewModel extends BaseViewModel {
   final GrammarRepository _grammarRepository;

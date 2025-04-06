@@ -7,8 +7,9 @@ import '../../features/home/viewmodels/home_view_model.dart';
 import '../../features/dictionary/viewmodels/dictionary_view_model.dart';
 import '../../features/dictionary/viewmodels/dictionary_detail_view_model.dart';
 import '../../features/settings/viewmodels/settings_view_model.dart';
-import '../../features/grammar/repositories/abstract/grammar_repository.dart';
-import '../../features/grammar/repositories/implementations/grammar_repository_impl.dart';
+import '../../features/learn/viewmodels/learn_viewmodel.dart';
+import '../repositories/abstract/grammar_repository.dart';
+import '../repositories/implementations/grammar_repository_impl.dart';
 import '../../features/grammar/viewmodels/grammar_list_view_model.dart';
 import '../../features/grammar/viewmodels/category_detail_view_model.dart';
 import '../../features/grammar/viewmodels/lesson_detail_view_model.dart';
@@ -124,5 +125,13 @@ Future<void> setupLocator() async {
 
   locator.registerFactory(
     () => LessonDetailViewModel(),
+  );
+
+  // Learn view model
+  locator.registerFactory(
+    () => LearnViewModel(
+      wordRepository: locator<WordRepository>(),
+      audioService: locator<AudioService>(),
+    ),
   );
 }

@@ -1,5 +1,5 @@
-import '../../../../core/models/api_response.dart';
-import '../../models/category_model.dart';
+import '../../models/api_response.dart';
+import '../../../features/grammar/models/category_model.dart';
 
 abstract class GrammarRepository {
   /// Fetch all grammar categories without lessons

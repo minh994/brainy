@@ -8,6 +8,12 @@ We are enhancing the user experience and functionality of the Brainy Flutter app
 4. Adding a Grammar feature with category and lesson views
 5. Optimizing API integration with proper error handling
 
+We've implemented a learning feature for vocabulary with the following components:
+
+1. **Learn View** - Displays a list of words with "learning" status.
+2. **Learning Mode Screen** - Interactive flashcard interface for learning words.
+3. **Audio Integration** - Consistent audio playback across the app using a shared AudioService.
+
 ## Recent Changes
 - Implemented a word status filtering system using an enum-based approach
 - Added color-coded part of speech indicators (noun, verb, adjective) in the Dictionary view
@@ -60,6 +66,38 @@ We are enhancing the user experience and functionality of the Brainy Flutter app
 - Consider implementing more robust state management if needed
 - Add caching for grammar lesson content to improve offline experience
 
+## Key Implementation Details
+
+### Learning Flow
+- Users can view all their "learning" words in a LearnView
+- A floating action button launches a bottom sheet with learning options
+- Users can start either Flashcard or Quiz mode
+- When learning is complete, a celebration screen appears
+
+### UI Components Structure
+We've broken down the Learning Mode UI into modular components:
+- **FlashcardWidget** - Displays a word and its definition, switchable by tapping
+- **CardSwiperWidget** - Handles card swiping with flutter_card_swiper
+- **LearningControls** - Bottom control buttons for Skip, Flip, and Learned actions
+- **CompletionScreen** - Appears when user completes all cards
+
+### Interaction Patterns
+- **Swipe left** to skip a word
+- **Swipe right** to mark a word as learned
+- **Tap** on card to flip between word and definition
+- Bottom buttons provide alternative to swipe actions
+
+### State Management
+- LearnViewModel manages the list of learning words and audio playback
+- Word status updates are persisted through the WordRepository
+- Learning progress is maintained across app sessions
+
+## Recent Learnings
+1. **Component Separation**: Breaking down complex screens into smaller components improves maintainability.
+2. **State Management**: Using proper state management patterns to track learning progress.
+3. **User Experience**: Providing multiple interaction methods (swipe and buttons) enhances accessibility.
+4. **Error Handling**: Gracefully handling edge cases when all cards are completed.
+
 ## Next Steps
 1. Improve performance of the Dictionary view with virtualized lists
 2. Add search history and favorites functionality
@@ -68,4 +106,8 @@ We are enhancing the user experience and functionality of the Brainy Flutter app
 5. Enhance the Grammar feature with interactive exercises
 6. Add offline mode with data caching
 7. Enhance accessibility features
-8. Implement user analytics to track learning progress 
+8. Implement user analytics to track learning progress
+9. Implement Quiz Mode as an alternative learning approach
+10. Add statistics tracking for learning progress
+11. Consider spaced repetition algorithms for word review scheduling
+12. Improve animations and transitions in the learning flow 

@@ -1,5 +1,80 @@
 # Technical Context
 
+## Core Technologies
+
+### Flutter Framework & Components
+- **Flutter 3.x** - UI framework
+- **Get_It** - Service locator for dependency injection
+- **Provider (via BaseViewModel)** - Simple state management
+- **Flutter Card Swiper** - Component used for flashcard interactions
+- **Audio Player** - For pronunciation playback
+
+## Architecture & Patterns
+
+### MVVM Pattern
+- **Models** - Data structures like Word, Sense, Example
+- **ViewModels** - Business logic and state management
+  - BaseViewModel - Foundation for all ViewModels
+  - LearnViewModel - Manages learning state and word statuses
+  - HomeViewModel - Manages home screen state
+  - DictionaryViewModel - Manages dictionary browsing
+  - DictionaryDetailViewModel - Handles word details
+- **Views** - UI components
+  - Structured hierarchically with parent views and child components
+  - Component-based approach for reusability
+
+### Dependency Injection
+- Service locator pattern with Get_It
+- Central registration in locator.dart
+- Factory pattern for ViewModels
+- Singleton pattern for services (AudioService)
+
+### Component Structure
+We've implemented a modular component architecture with:
+1. **Core Widgets** - Reusable across the app
+   - AudioButton
+   - BusyIndicator
+   
+2. **Feature-specific Components** - Encapsulated in feature folders
+   - FlashcardWidget
+   - LearningControls
+   - CardSwiperWidget
+   - CompletionScreen
+
+## Data Management
+
+### API Integration
+- **BrainyApiClient** - Central HTTP client for API communication
+- **ApiResponse<T>** - Generic wrapper for API responses with success/error handling
+- **Repositories** - Interface between ViewModels and API
+  - WordRepository - Handles CRUD operations for words and learning statuses
+
+### Local Storage
+- **SharedPrefsStorage** - Wrapper for SharedPreferences
+- **StorageService** - Interface for storage operations
+- Used for token storage and app settings
+
+## Development Patterns
+
+### Error Handling
+- Consistent error handling through ApiResponse
+- Error states in ViewModels
+- User-friendly error messages in UI
+
+### Navigation
+- AppRouter - Centralized navigation
+- Named routes
+- Nested routing for feature modules
+
+### Testing
+- Unit testing for critical components
+- UI testing for main workflows
+
+## External Libraries
+- **flutter_card_swiper**: For interactive flashcard swiping functionality
+- **get_it**: For dependency injection
+- **audioplayers**: For audio playback of word pronunciations
+
 ## Technology Stack
 
 ### Core Technologies
