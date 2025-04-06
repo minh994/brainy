@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../../core/base/base_view.dart';
 import '../../../core/dependency_injection/locator.dart';
@@ -20,6 +21,15 @@ class _LoginViewState extends State<LoginView> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    if (kDebugMode) {
+      _usernameController.text = 'ngodat123';
+      _passwordController.text = 'Code26102003';
+    }
+  }
 
   @override
   void dispose() {

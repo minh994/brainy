@@ -1,25 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'core/routes/app_router.dart';
 import 'core/dependency_injection/locator.dart';
-import 'core/config/env_config.dart';
+import 'core/routes/app_router.dart';
+import 'core/themes/app_theme.dart';
 import 'features/auth/controllers/auth_controller.dart';
+import 'core/config/env_config.dart';
 
-void main() async {
+Future<void> main() async {
   // Ensure Flutter binding is initialized
   WidgetsFlutterBinding.ensureInitialized();
 
   // Initialize environment configuration
   await EnvConfig().initialize();
 
-  // Setup dependency injection
+  // Set up dependency injection
   await setupLocator();
 
-  runApp(const MyApp());
+  runApp(const BrainyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class BrainyApp extends StatelessWidget {
+  const BrainyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,23 +29,9 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: EnvConfig().appName,
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-          useMaterial3: true,
-          inputDecorationTheme: const InputDecorationTheme(
-            border: OutlineInputBorder(),
-            filled: true,
-            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-          ),
-          elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-          ),
-        ),
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        themeMode: ThemeMode.system,
         initialRoute: AppRouter.login,
         onGenerateRoute: AppRouter.generateRoute,
       ),

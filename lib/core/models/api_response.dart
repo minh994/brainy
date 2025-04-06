@@ -4,6 +4,7 @@ class ApiResponse<T> {
   final bool success;
   final String message;
   final T? data;
+  final int? totalCount;
 
   ApiResponse({
     required this.status,
@@ -11,11 +12,15 @@ class ApiResponse<T> {
     required this.success,
     required this.message,
     this.data,
+    this.totalCount,
   });
 
   factory ApiResponse.fromJson(
       Map<String, dynamic> json, T Function(dynamic) fromJsonT) {
     final data = json.containsKey('data') ? json['data'] : json;
+
+    // Extract totalCount from top level fields
+    final totalCount = json['totalCount'] ?? json['total'] ?? json['count'];
 
     return ApiResponse(
       status: json['status'] ?? 'error',
@@ -23,6 +28,7 @@ class ApiResponse<T> {
       success: json['success'] ?? false,
       message: json['message'] ?? '',
       data: fromJsonT(data),
+      totalCount: totalCount,
     );
   }
 
@@ -36,6 +42,7 @@ class ApiResponse<T> {
       success: false,
       message: message,
       data: null,
+      totalCount: null,
     );
   }
 
@@ -43,6 +50,7 @@ class ApiResponse<T> {
     int code = 200,
     String message = 'Success',
     required T? data,
+    int? totalCount,
   }) {
     return ApiResponse(
       status: 'success',
@@ -50,6 +58,7 @@ class ApiResponse<T> {
       success: true,
       message: message,
       data: data,
+      totalCount: totalCount,
     );
   }
 }
