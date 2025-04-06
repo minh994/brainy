@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/models/word_model.dart';
+import '../../../core/widgets/audio_button.dart';
 
 class VocabularyCard extends StatefulWidget {
   final Word word;
@@ -7,6 +8,7 @@ class VocabularyCard extends StatefulWidget {
   final VoidCallback? onLearn;
   final VoidCallback? onAudioTapPhonetic;
   final VoidCallback? onAudioTapPhoneticAm;
+  final bool isPlayingAudio;
 
   const VocabularyCard({
     Key? key,
@@ -15,6 +17,7 @@ class VocabularyCard extends StatefulWidget {
     this.onLearn,
     this.onAudioTapPhonetic,
     this.onAudioTapPhoneticAm,
+    this.isPlayingAudio = false,
   }) : super(key: key);
 
   @override
@@ -95,21 +98,10 @@ class _VocabularyCardState extends State<VocabularyCard> {
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.blueAccent,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: InkWell(
-                            onTap: widget.onAudioTapPhonetic,
-                            borderRadius: BorderRadius.circular(8),
-                            child: const Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 5, vertical: 5),
-                              child: Icon(Icons.volume_up,
-                                  size: 18, color: Colors.white),
-                            ),
-                          ),
+                        AudioButton(
+                          onTap: widget.onAudioTapPhonetic ?? () {},
+                          backgroundColor: Colors.blueAccent,
+                          isPlaying: widget.isPlayingAudio,
                         ),
                         const SizedBox(width: 5),
                         Text(
@@ -127,21 +119,10 @@ class _VocabularyCardState extends State<VocabularyCard> {
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.redAccent,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: InkWell(
-                            onTap: widget.onAudioTapPhoneticAm,
-                            borderRadius: BorderRadius.circular(8),
-                            child: const Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 5, vertical: 5),
-                              child: Icon(Icons.volume_up,
-                                  size: 18, color: Colors.white),
-                            ),
-                          ),
+                        AudioButton(
+                          onTap: widget.onAudioTapPhoneticAm ?? () {},
+                          backgroundColor: Colors.redAccent,
+                          isPlaying: widget.isPlayingAudio,
                         ),
                         const SizedBox(width: 5),
                         Text(
@@ -179,6 +160,7 @@ class _VocabularyCardState extends State<VocabularyCard> {
                           ExampleItem(
                             example: currentExample!.x,
                             onAudioTap: widget.onAudioTapPhonetic,
+                            isPlayingAudio: widget.isPlayingAudio,
                           ),
                         ],
                       ),
@@ -238,20 +220,29 @@ class _VocabularyCardState extends State<VocabularyCard> {
 class ExampleItem extends StatelessWidget {
   final String example;
   final VoidCallback? onAudioTap;
+  final bool isPlayingAudio;
 
   const ExampleItem({
     Key? key,
     required this.example,
     this.onAudioTap,
+    this.isPlayingAudio = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      contentPadding: EdgeInsets.zero,
+      leading: AudioButton(
+        onTap: onAudioTap ?? () {},
+        backgroundColor: Colors.blueAccent,
+        isPlaying: isPlayingAudio,
+        size: 16,
+      ),
       title: Text(
         example,
         style: const TextStyle(
-          fontSize: 11,
+          fontSize: 14,
         ),
       ),
     );

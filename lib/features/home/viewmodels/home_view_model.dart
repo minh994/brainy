@@ -1,25 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:just_audio/just_audio.dart';
 import '../../../core/base/base_view_model.dart';
 import '../../../core/enums/word_status_enum.dart';
 import '../../../core/models/word_model.dart';
 import '../../../core/repositories/abstract/word_repository.dart';
+import '../../../core/services/audio/audio_service.dart';
 
 class HomeViewModel extends BaseViewModel {
   final WordRepository _wordRepository;
-  AudioPlayer? _audioPlayer;
+  final AudioService _audioService;
 
   List<Word> _words = [];
   int _currentPage = 1;
   final int _limit = 10;
-  bool _isPlayingAudio = false;
 
   HomeViewModel({
     required WordRepository wordRepository,
-  }) : _wordRepository = wordRepository;
+    required AudioService audioService,
+  })  : _wordRepository = wordRepository,
+        _audioService = audioService;
 
   List<Word> get words => _words;
-  bool get isPlayingAudio => _isPlayingAudio;
+  bool get isPlayingAudio => _audioService.isPlaying;
 
   Future<void> loadWords() async {
     setBusy(true);
@@ -85,32 +86,13 @@ class HomeViewModel extends BaseViewModel {
   }
 
   Future<void> playAudio(String? audioUrl) async {
-    if (_isPlayingAudio || audioUrl == null || audioUrl.isEmpty) return;
-
-    _isPlayingAudio = true;
+    await _audioService.playAudio(audioUrl);
     notifyListeners();
-
-    try {
-      debugPrint('Playing audio: $audioUrl');
-
-      // Create a new instance each time to avoid issues
-      _audioPlayer?.dispose();
-      _audioPlayer = AudioPlayer();
-
-      await _audioPlayer?.setUrl(audioUrl);
-      await _audioPlayer?.play();
-    } catch (e) {
-      debugPrint('Error playing audio: $e');
-    } finally {
-      _isPlayingAudio = false;
-      notifyListeners();
-    }
   }
 
   @override
   void dispose() {
-    _audioPlayer?.dispose();
-    _audioPlayer = null;
+    // No need to dispose audio service as it's a singleton
     super.dispose();
   }
 }

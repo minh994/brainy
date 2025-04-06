@@ -139,6 +139,7 @@ class _HomeViewState extends State<HomeView> {
                       onAudioTapPhonetic: () => model.playAudio(word.phonetic),
                       onAudioTapPhoneticAm: () =>
                           model.playAudio(word.phoneticAm),
+                      isPlayingAudio: model.isPlayingAudio,
                     );
                   },
                 ),

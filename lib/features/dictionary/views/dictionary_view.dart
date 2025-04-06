@@ -1,3 +1,4 @@
+import 'package:brainy_flutter/features/dictionary/views/dictionary_detail_view.dart';
 import 'package:flutter/material.dart';
 import '../../../core/base/base_view.dart';
 import '../../../core/dependency_injection/locator.dart';
@@ -140,6 +141,14 @@ class _DictionaryViewState extends State<DictionaryView> {
     );
   }
 
+  void _navigateToWordDetails(BuildContext context, Word word) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => WordDetailsScreen(word: word),
+      ),
+    );
+  }
+
   Widget _buildFilterChip(
     BuildContext context,
     WordStatus status,
@@ -203,100 +212,103 @@ class _DictionaryViewState extends State<DictionaryView> {
     final Color posColor = word.getPosColor();
     final String posDisplayName = word.pos;
 
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 1,
-            blurRadius: 3,
-            offset: const Offset(0, 1),
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Top row with word, phonetic and POS
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Word and phonetic
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            word.word,
-                            style: const TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(width: 6),
-                          InkWell(
-                            onTap: () {
-                              // Play pronunciation
-                            },
-                            child: Icon(Icons.volume_up,
-                                size: 16,
-                                color: Theme.of(context).primaryColor),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                // POS badge
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: posColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(4),
-                    border: Border.all(
-                      color: posColor,
-                      width: 1,
-                    ),
-                  ),
-                  child: Text(
-                    posDisplayName,
-                    style: TextStyle(
-                      fontSize: 10,
-                      color: posColor,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-
-            // Definition
-            const SizedBox(height: 12),
-            Text(
-              translationText,
-              style: TextStyle(
-                fontSize: 13,
-                color: Colors.grey[700],
-              ),
-            ),
-
-            // Learning status indicator
-            const SizedBox(height: 12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                _buildLearningStatusIndicator(word, model),
-              ],
+    return GestureDetector(
+      onTap: () => _navigateToWordDetails(context, word),
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              spreadRadius: 1,
+              blurRadius: 3,
+              offset: const Offset(0, 1),
             ),
           ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Top row with word, phonetic and POS
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Word and phonetic
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              word.word,
+                              style: const TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(width: 6),
+                            InkWell(
+                              onTap: () {
+                                // Play pronunciation
+                              },
+                              child: Icon(Icons.volume_up,
+                                  size: 16,
+                                  color: Theme.of(context).primaryColor),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  // POS badge
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: posColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(
+                        color: posColor,
+                        width: 1,
+                      ),
+                    ),
+                    child: Text(
+                      posDisplayName,
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: posColor,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              // Definition
+              const SizedBox(height: 12),
+              Text(
+                translationText,
+                style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.grey[700],
+                ),
+              ),
+
+              // Learning status indicator
+              const SizedBox(height: 12),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  _buildLearningStatusIndicator(word, model),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
