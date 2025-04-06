@@ -116,11 +116,11 @@ class _HomeViewState extends State<HomeView> {
                       final swipedWord = model.words[previousIndex];
 
                       if (direction == CardSwiperDirection.left) {
-                        // Left swipe - mark as skipped if not already handled by button
-                        // model.setWordSkipped(swipedWord.id);
+                        // Left swipe - mark as skipped
+                        model.setWordSkipped(swipedWord.id);
                       } else if (direction == CardSwiperDirection.right) {
-                        // Right swipe - mark as learning if not already handled by button
-                        // model.setWordLearning(swipedWord.id);
+                        // Right swipe - mark as learning
+                        model.setWordLearning(swipedWord.id);
                       }
                     }
 

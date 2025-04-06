@@ -12,6 +12,8 @@
 - **just_audio**: Audio playback for pronunciation
 - **flutter_card_swiper**: Card swiping functionality for vocabulary learning
 - **google_fonts**: Custom font integration
+- **flutter_markdown**: Markdown rendering for grammar lessons
+- **url_launcher**: Opening external links from markdown content
 
 ### Persistence
 - **shared_preferences**: Lightweight key-value storage
@@ -21,6 +23,7 @@
 - **http**: HTTP requests and API communication
 - **provider**: ChangeNotifier-based state management
 - **flutter_dotenv**: Environment configuration management
+- **intl**: Internationalization and date formatting
 
 ## Development Environment
 
@@ -63,6 +66,12 @@
 - Resource management and disposal
 - Error handling for media playback
 
+### Content Rendering
+- Markdown rendering with flutter_markdown
+- Custom styling for markdown elements
+- Table formatting and styling
+- External link handling
+
 ## Feature Components
 
 ### Dictionary
@@ -70,6 +79,14 @@
 - Part of speech visualization
 - Search functionality
 - API integration
+
+### Grammar
+- Category-based organization
+- Progress tracking per category
+- Lesson hierarchy within categories
+- Markdown content rendering
+- Styled tables and typography
+- API integration with categories and lessons endpoints
 
 ### Settings
 - Theme management
@@ -128,4 +145,5 @@
 - Lazy loading for large datasets
 - Image optimization
 - Memory management for disposable resources
-- Audio resource disposal 
+- Audio resource disposal
+- Efficient markdown rendering 

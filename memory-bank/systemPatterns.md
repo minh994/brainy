@@ -29,6 +29,12 @@ lib/
   │   ├── dictionary/           # Dictionary feature
   │   │   ├── viewmodels/       # Dictionary ViewModels
   │   │   └── views/            # Dictionary UI components
+  │   ├── grammar/              # Grammar feature
+  │   │   ├── components/       # Grammar-specific UI components
+  │   │   ├── models/           # Grammar data models
+  │   │   ├── repositories/     # Grammar repositories
+  │   │   ├── viewmodels/       # Grammar ViewModels
+  │   │   └── views/            # Grammar UI components
   │   ├── settings/             # Settings feature
   │   │   ├── viewmodels/       # Settings ViewModels
   │   │   └── views/            # Settings UI components  
@@ -70,6 +76,11 @@ lib/
 - Implemented in Dictionary view using status-based filtering
 - Allows for dynamic filtering of data based on selected criteria
 - Combines well with search functionality
+
+### 7. Category-Lesson Pattern
+- Hierarchical structure used in the Grammar feature
+- Categories contain lessons in a parent-child relationship
+- Enables navigation from general (categories) to specific (lesson content)
 
 ## Key Components
 
@@ -139,6 +150,15 @@ The Dictionary feature implements:
 2. Part of speech visualization with color coding
 3. Search functionality across words and definitions
 4. Efficient API integration with the repository pattern
+
+### Grammar Feature
+The Grammar feature implements:
+1. Categories listing with progress indicators
+2. Category detail view with lesson listings
+3. Markdown-based lesson content rendering
+4. Custom styling for tables, headings, and other markdown elements
+5. Repository pattern for API integration
+6. Responsive design for different screen sizes
 
 ### Settings Feature
 The Settings feature provides:

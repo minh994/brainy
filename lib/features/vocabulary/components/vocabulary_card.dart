@@ -58,9 +58,9 @@ class _VocabularyCardState extends State<VocabularyCard> {
             // Header with navigation tabs
             Row(
               children: [
-                _buildTabButton('New', isActive: true),
+                _buildTabButton('New', Colors.green, isActive: true),
                 const SizedBox(width: 8),
-                _buildTabButton('My words', isActive: false),
+                _buildTabButton(widget.word.pos, widget.word.getPosColor()),
                 const Spacer(),
                 IconButton(
                   icon: const Icon(Icons.more_vert),
@@ -209,22 +209,28 @@ class _VocabularyCardState extends State<VocabularyCard> {
     );
   }
 
-  Widget _buildTabButton(String text, {required bool isActive}) {
-    return TextButton(
-      style: TextButton.styleFrom(
-        backgroundColor:
-            isActive ? Colors.green.withOpacity(0.1) : Colors.grey[200],
-        foregroundColor: isActive ? Colors.green : Colors.black,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+  Widget _buildTabButton(String text, Color? color, {bool isActive = false}) {
+    Color? backgroundColor;
+    if (isActive) {
+      backgroundColor = Colors.green.withOpacity(0.5);
+    } else {
+      backgroundColor = color?.withOpacity(0.1);
+    }
+    return Container(
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: color ?? Colors.grey[200]!),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      child: Text(
+        text,
+        style: TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.w500,
+          color: isActive ? Colors.grey[800] : color,
         ),
       ),
-      onPressed: () {},
-      child: Text(text,
-          style: const TextStyle(
-            fontSize: 11,
-            fontWeight: FontWeight.w500,
-          )),
     );
   }
 }

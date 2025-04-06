@@ -123,7 +123,6 @@ class WordRepositoryImpl implements WordRepository {
       '/learn/status?status=$status&page=$page&limit=$limit',
       (json) => json is Map<String, dynamic> ? json : <String, dynamic>{},
     );
-
     if (!apiResponse.success || apiResponse.data == null) {
       return ApiResponse.error(
         code: apiResponse.code,

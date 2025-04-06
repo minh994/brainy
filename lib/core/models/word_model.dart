@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class Example {
   final String id;
   final String senseId;
@@ -127,6 +129,49 @@ class Word {
     this.lastReviewed,
     this.proficiencyLevel = 0,
   });
+
+  // Color mapping for parts of speech
+  final Map<String, Color> _posColors = {
+    // Full words
+    'noun': Colors.purple,
+    'verb': Colors.blue,
+    'adjective': Colors.green,
+    'adverb': Colors.amber,
+    'preposition': Colors.orange,
+    'conjunction': Colors.red,
+    'pronoun': Colors.teal,
+    'determiner': Colors.brown,
+    'interjection': Colors.deepPurple,
+
+    // Abbreviations for backward compatibility
+    'n': Colors.purple,
+    'v': Colors.blue,
+    'adj': Colors.green,
+    'adv': Colors.amber,
+    'prep': Colors.orange,
+    'conj': Colors.red,
+    'pron': Colors.teal,
+    'det': Colors.brown,
+    'interj': Colors.deepPurple,
+  };
+
+  // Get color for part of speech
+  Color getPosColor() {
+    // First try direct match with the lowercase pos
+    final normalizedPos = pos.toLowerCase().trim();
+    if (_posColors.containsKey(normalizedPos)) {
+      return _posColors[normalizedPos]!;
+    }
+
+    // Then try matching only the first part (e.g., "noun (plural)" → "noun")
+    final firstPart = normalizedPos.split(' ').first.split('.').first;
+    if (_posColors.containsKey(firstPart)) {
+      return _posColors[firstPart]!;
+    }
+
+    // Default color if no match
+    return Colors.grey;
+  }
 
   factory Word.fromJson(Map<String, dynamic> json) {
     List<Sense> senses = [];

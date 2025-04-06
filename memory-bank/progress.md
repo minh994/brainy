@@ -38,6 +38,16 @@
 - ✅ API integration with status endpoint
 - ✅ Error handling for API responses
 
+### Grammar Feature
+- ✅ Category listing view with progress indicators
+- ✅ Category detail view with lessons list
+- ✅ Lesson detail view with markdown rendering
+- ✅ Custom styled markdown tables and components
+- ✅ Repository pattern implementation for grammar data
+- ✅ API integration with category and lesson endpoints
+- ✅ Navigation between category and lesson views
+- ✅ Error handling for API responses
+
 ### Settings Feature
 - ✅ Settings screen with sections
 - ✅ Dark mode toggle
@@ -65,6 +75,11 @@
 - 🔄 Word learning progress tracking
 - 🔄 Spaced repetition algorithm
 - 🔄 Interactive exercises
+
+### Grammar Enhancements
+- 🔄 Interactive grammar exercises
+- 🔄 Progress tracking for completed lessons
+- 🔄 Offline caching for lesson content
 
 ## Planned Features
 
@@ -103,10 +118,12 @@ Our architecture has evolved from a simple MVC to a full MVVM implementation wit
 6. Consistent error handling
 7. Feature-focused directory structure
 8. Enum-based standardization for type safety
+9. Category-lesson hierarchical structure for grammar content
 
 ## Next Release Goals
 1. Complete authentication flow with auto-login and token refresh
 2. Implement interactive learning exercises
 3. Add word learning progress tracking
-4. Improve offline functionality
-5. Enhance UI/UX with animations and transitions 
+4. Enhance the grammar feature with interactive exercises
+5. Improve offline functionality with content caching
+6. Enhance UI/UX with animations and transitions 

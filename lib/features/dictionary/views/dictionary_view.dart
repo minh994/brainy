@@ -200,8 +200,8 @@ class _DictionaryViewState extends State<DictionaryView> {
         word.senses.isNotEmpty ? word.senses.first.definition : '';
 
     // Get POS color and display name
-    final Color posColor = model.getPosColor(word.pos);
-    final String posDisplayName = model.getPosDisplayName(word.pos);
+    final Color posColor = word.getPosColor();
+    final String posDisplayName = word.pos;
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
