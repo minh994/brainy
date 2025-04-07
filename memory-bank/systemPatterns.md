@@ -172,6 +172,19 @@ lib/
 - Categories contain lessons in a parent-child relationship
 - Enables navigation from general (categories) to specific (lesson content)
 
+### 8. Pagination Pattern
+- **Implementation**: Using the `infinite_scroll_pagination` package to efficiently load large datasets
+- **Key Components**:
+  - `PagingController<Key, Item>` - Manages pagination state and loading logic
+  - `PagedListView` - UI component that displays paginated data
+  - `PagingListener` - Responds to pagination state changes
+- **Benefits**:
+  - Memory efficiency by loading only visible data
+  - Better performance with large datasets
+  - Automatic loading indicators and error handling
+  - Reduced network usage
+- **Usage**: Implemented in Dictionary feature to load words with different filters
+
 ## Key Components
 
 ### BaseViewModel

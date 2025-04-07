@@ -1,5 +1,6 @@
 import 'package:brainy_flutter/features/dictionary/views/dictionary_detail_view.dart';
 import 'package:flutter/material.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import '../../../core/base/base_view.dart';
 import '../../../core/dependency_injection/locator.dart';
 import '../../../core/enums/word_status_enum.dart';
@@ -122,17 +123,40 @@ class _DictionaryViewState extends State<DictionaryView> {
                 ),
               ),
 
-              // Word list
+              // Word list with pagination
               Expanded(
-                child: model.filteredWords.isEmpty
-                    ? const Center(child: Text('No words found'))
-                    : ListView.builder(
-                        itemCount: model.filteredWords.length,
-                        itemBuilder: (context, index) {
-                          final word = model.filteredWords[index];
-                          return _buildWordItem(word, model);
-                        },
+                child: PagingListener(
+                  controller: model.currentPagingController,
+                  builder: (context, state, fetchNextPage) =>
+                      PagedListView<int, Word>(
+                    state: state,
+                    fetchNextPage: fetchNextPage,
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    builderDelegate: PagedChildBuilderDelegate<Word>(
+                      itemBuilder: (context, word, index) =>
+                          _buildWordItem(word, model),
+                      firstPageErrorIndicatorBuilder: (_) => Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text('Failed to load words'),
+                            ElevatedButton(
+                              onPressed: () =>
+                                  model.currentPagingController.refresh(),
+                              child: const Text('Retry'),
+                            ),
+                          ],
+                        ),
                       ),
+                      noItemsFoundIndicatorBuilder: (_) => const Center(
+                        child: Text('No words found'),
+                      ),
+                      firstPageProgressIndicatorBuilder: (_) => const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
@@ -209,7 +233,7 @@ class _DictionaryViewState extends State<DictionaryView> {
         word.senses.isNotEmpty ? word.senses.first.definition : '';
 
     // Get POS color and display name
-    final Color posColor = word.getPosColor();
+    final Color posColor = model.getPosColor(word.pos);
     final String posDisplayName = word.pos;
 
     return GestureDetector(
@@ -254,9 +278,14 @@ class _DictionaryViewState extends State<DictionaryView> {
                             const SizedBox(width: 6),
                             InkWell(
                               onTap: () {
-                                // Play pronunciation
+                                if (word.phonetic != null) {
+                                  model.playAudio(word.phonetic!);
+                                }
                               },
-                              child: Icon(Icons.volume_up,
+                              child: Icon(
+                                  model.isPlayingAudio
+                                      ? Icons.volume_up
+                                      : Icons.volume_up_outlined,
                                   size: 16,
                                   color: Theme.of(context).primaryColor),
                             ),

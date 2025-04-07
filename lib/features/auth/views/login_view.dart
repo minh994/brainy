@@ -26,7 +26,7 @@ class _LoginViewState extends State<LoginView> {
   void initState() {
     super.initState();
     if (kDebugMode) {
-      _usernameController.text = 'ngodat123';
+      _usernameController.text = 'ngodat213';
       _passwordController.text = 'Code26102003';
     }
   }

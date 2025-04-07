@@ -14,6 +14,13 @@ We've implemented a learning feature for vocabulary with the following component
 2. **Learning Mode Screen** - Interactive flashcard interface for learning words.
 3. **Audio Integration** - Consistent audio playback across the app using a shared AudioService.
 
+### Dictionary Feature Enhancements
+- Optimizing the Dictionary view with paginated loading
+- Implementing infinite scrolling for better performance with large word lists
+- Using separate pagination controllers for different word statuses (all, learning, learned, skipped)
+- Ensuring proper resource management for pagination controllers
+- Integrating pagination with the existing search and filtering functionality
+
 ## Recent Changes
 - Implemented a word status filtering system using an enum-based approach
 - Added color-coded part of speech indicators (noun, verb, adjective) in the Dictionary view

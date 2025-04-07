@@ -20,7 +20,7 @@ class ApiResponse<T> {
     final data = json.containsKey('data') ? json['data'] : json;
 
     // Extract totalCount from top level fields
-    final totalCount = json['totalCount'] ?? json['total'] ?? json['count'];
+    final totalCount = json['data']['total'];
 
     return ApiResponse(
       status: json['status'] ?? 'error',

@@ -37,6 +37,9 @@
 - ✅ Word item display with definitions
 - ✅ API integration with status endpoint
 - ✅ Error handling for API responses
+- ✅ Infinite scrolling pagination
+- ✅ Status-specific pagination controllers
+- ✅ Proper resource management for pagination controllers
 
 ### Grammar Feature
 - ✅ Category listing view with progress indicators

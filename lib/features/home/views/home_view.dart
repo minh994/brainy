@@ -3,7 +3,7 @@ import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import '../../../core/base/base_view.dart';
 import '../../../core/dependency_injection/locator.dart';
 import '../../../core/widgets/busy_indicator.dart';
-import '../../vocabulary/components/vocabulary_card.dart';
+import '../components/vocabulary_card.dart';
 import '../viewmodels/home_view_model.dart';
 
 class HomeView extends StatefulWidget {

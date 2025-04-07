@@ -221,4 +221,14 @@ We've implemented a modular component architecture with:
 - Image optimization
 - Memory management for disposable resources
 - Audio resource disposal
-- Efficient markdown rendering 
+- Efficient markdown rendering
+
+### Core Dependencies
+- **flutter_dotenv** - Environment configuration management
+- **provider** - State management solution
+- **http** - HTTP client for API communication
+- **shared_preferences** - Local storage for user preferences and caching
+- **just_audio** - Audio playback for word pronunciations
+- **flutter_card_swiper** - Card swiping functionality for learning mode
+- **google_fonts** - Integration of custom fonts
+- **infinite_scroll_pagination** - Pagination for efficient loading of large data sets 

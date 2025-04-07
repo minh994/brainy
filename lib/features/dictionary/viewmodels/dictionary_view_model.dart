@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import '../../../core/base/base_view_model.dart';
 import '../../../core/enums/word_status_enum.dart';
 import '../../../core/models/word_model.dart';
@@ -7,163 +8,235 @@ import '../../../core/repositories/abstract/word_repository.dart';
 class DictionaryViewModel extends BaseViewModel {
   final WordRepository _wordRepository;
 
-  List<Word> _words = [];
-  List<Word> _filteredWords = [];
-  String _query = '';
+  DictionaryViewModel({required WordRepository wordRepository})
+      : _wordRepository = wordRepository;
+
+  // Current filter status
   WordStatus _activeStatus = WordStatus.all;
-
-  // Status counts - these will be populated from API
-  final Map<WordStatus, int> _statusCounts = {
-    WordStatus.all: 0,
-    WordStatus.learning: 0,
-    WordStatus.learned: 0,
-    WordStatus.skip: 0,
-  };
-
-  DictionaryViewModel({
-    required WordRepository wordRepository,
-  }) : _wordRepository = wordRepository;
-
-  List<Word> get words => _words;
-  List<Word> get filteredWords => _filteredWords;
   WordStatus get activeStatus => _activeStatus;
+
+  // Status counts
+  final Map<WordStatus, int> _statusCounts = {};
   Map<WordStatus, int> get statusCounts => _statusCounts;
 
-  // Get a user-friendly display name for the part of speech
-  String getPosDisplayName(String pos) {
-    // Already lowercase and looks good, use as is
-    return pos.toLowerCase().trim();
+  // Pagination controllers for each status
+  late final PagingController<int, Word> allWordsPagingController =
+      PagingController<int, Word>(
+    getNextPageKey: (state) => (state.keys?.last ?? 0) + 1,
+    fetchPage: _fetchAllWordsPage,
+  );
+
+  late final PagingController<int, Word> learningWordsPagingController =
+      PagingController<int, Word>(
+    getNextPageKey: (state) => (state.keys?.last ?? 0) + 1,
+    fetchPage: (pageKey) => _fetchStatusWordsPage(pageKey, WordStatus.learning),
+  );
+
+  late final PagingController<int, Word> learnedWordsPagingController =
+      PagingController<int, Word>(
+    getNextPageKey: (state) => (state.keys?.last ?? 0) + 1,
+    fetchPage: (pageKey) => _fetchStatusWordsPage(pageKey, WordStatus.learned),
+  );
+
+  late final PagingController<int, Word> skippedWordsPagingController =
+      PagingController<int, Word>(
+    getNextPageKey: (state) => (state.keys?.last ?? 0) + 1,
+    fetchPage: (pageKey) => _fetchStatusWordsPage(pageKey, WordStatus.skip),
+  );
+
+  // Search query
+  String _searchQuery = '';
+  String get searchQuery => _searchQuery;
+
+  // Audio playback status
+  bool _isPlayingAudio = false;
+  bool get isPlayingAudio => _isPlayingAudio;
+
+  // Constants
+  static const int _pageSize = 10;
+
+  @override
+  void dispose() {
+    allWordsPagingController.dispose();
+    learningWordsPagingController.dispose();
+    learnedWordsPagingController.dispose();
+    skippedWordsPagingController.dispose();
+    super.dispose();
   }
 
+  // Color mapping for parts of speech
+  final Map<String, Color> _posColors = {
+    // Full words
+    'noun': Colors.purple,
+    'verb': Colors.blue,
+    'adjective': Colors.green,
+    'adverb': Colors.amber,
+    'preposition': Colors.orange,
+    'conjunction': Colors.red,
+    'pronoun': Colors.teal,
+    'determiner': Colors.brown,
+    'interjection': Colors.deepPurple,
+
+    // Abbreviations for backward compatibility
+    'n': Colors.purple,
+    'v': Colors.blue,
+    'adj': Colors.green,
+    'adv': Colors.amber,
+    'prep': Colors.orange,
+    'conj': Colors.red,
+    'pron': Colors.teal,
+    'det': Colors.brown,
+    'interj': Colors.deepPurple,
+  };
+
+  Color getPosColor(String pos) {
+    return _posColors[pos.toLowerCase()] ?? Colors.grey;
+  }
+
+  // Initialize pagination controllers and load initial data
   Future<void> loadWords() async {
     setBusy(true);
-    setError(null);
 
     try {
-      // First load all words to get the total count
-      final response = await _wordRepository.getWords();
+      // Load status counts
+      await _loadStatusCounts();
 
-      if (response.success && response.data != null) {
-        _words = response.data!;
-        _statusCounts[WordStatus.all] = _words.length;
-
-        // Then load status counts
-        await _loadStatusCounts();
-
-        // Then apply filters based on active status
-        await _loadWordsByStatus();
-
-        setBusy(false);
-      } else {
-        setError(response.message ?? 'Failed to load words');
-        setBusy(false);
-      }
+      setBusy(false);
     } catch (e) {
       setError(e.toString());
       setBusy(false);
     }
   }
 
+  // Load counts for all statuses
   Future<void> _loadStatusCounts() async {
     try {
-      // Learning status count
-      final learningResponse = await _wordRepository.getWordsByStatus(
-        status: WordStatus.learning.value,
-        limit: 1,
-      );
-      if (learningResponse.success) {
-        _statusCounts[WordStatus.learning] = learningResponse.totalCount ?? 0;
-        debugPrint('Learning count: ${learningResponse.totalCount ?? 0}');
-      } else {
-        debugPrint('Error getting learning count: ${learningResponse.message}');
+      // All words count
+      final allWordsResponse =
+          await _wordRepository.getWordsPaginated(page: 1, limit: 10);
+      if (allWordsResponse.success && allWordsResponse.totalCount != null) {
+        _statusCounts[WordStatus.all] = allWordsResponse.totalCount!;
       }
 
-      // Mastered status count
-      final masteredResponse = await _wordRepository.getWordsByStatus(
-        status: WordStatus.learned.value,
-        limit: 1,
-      );
-      if (masteredResponse.success) {
-        _statusCounts[WordStatus.learned] = masteredResponse.totalCount ?? 0;
-        debugPrint('Mastered count: ${masteredResponse.totalCount ?? 0}');
-      } else {
-        debugPrint('Error getting mastered count: ${masteredResponse.message}');
+      // Learning words count
+      final learningWordsResponse = await _wordRepository.getWordsByStatus(
+          status: WordStatus.learning.value, page: 1, limit: 10);
+      if (learningWordsResponse.success &&
+          learningWordsResponse.totalCount != null) {
+        _statusCounts[WordStatus.learning] = learningWordsResponse.totalCount!;
       }
 
-      // Skipped status count
-      final skippedResponse = await _wordRepository.getWordsByStatus(
-        status: WordStatus.skip.value,
-        limit: 1,
-      );
-      if (skippedResponse.success) {
-        _statusCounts[WordStatus.skip] = skippedResponse.totalCount ?? 0;
-        debugPrint('Skipped count: ${skippedResponse.totalCount ?? 0}');
-      } else {
-        debugPrint('Error getting skipped count: ${skippedResponse.message}');
+      // Learned words count
+      final learnedWordsResponse = await _wordRepository.getWordsByStatus(
+          status: WordStatus.learned.value, page: 1, limit: 10);
+      if (learnedWordsResponse.success &&
+          learnedWordsResponse.totalCount != null) {
+        _statusCounts[WordStatus.learned] = learnedWordsResponse.totalCount!;
+      }
+
+      // Skipped words count
+      final skippedWordsResponse = await _wordRepository.getWordsByStatus(
+          status: WordStatus.skip.value, page: 1, limit: 10);
+      if (skippedWordsResponse.success &&
+          skippedWordsResponse.totalCount != null) {
+        _statusCounts[WordStatus.skip] = skippedWordsResponse.totalCount!;
       }
 
       notifyListeners();
     } catch (e) {
-      // Just log the error but don't stop the main flow
       debugPrint('Error loading status counts: $e');
     }
   }
 
-  void searchWords(String query) {
-    _query = query.toLowerCase().trim();
-    _applySearchFilter();
-  }
-
-  Future<void> setActiveStatus(WordStatus status) async {
-    if (_activeStatus == status) return;
-
-    _activeStatus = status;
-    await _loadWordsByStatus();
-  }
-
-  Future<void> _loadWordsByStatus() async {
-    setBusy(true);
-
+  // Fetch a page of words for All status
+  Future<List<Word>> _fetchAllWordsPage(int pageKey) async {
     try {
-      if (_activeStatus == WordStatus.all) {
-        // For "All" status, use the main words list
-        final response = await _wordRepository.getWords();
-        if (response.success && response.data != null) {
-          _words = response.data!;
-          _applySearchFilter();
-        }
-      } else {
-        // For specific status, call the status-filtered endpoint
-        final response = await _wordRepository.getWordsByStatus(
-          status: _activeStatus.value,
-          page: 1,
-          limit: 50, // Adjust based on your needs
-        );
+      final response = await _wordRepository.getWordsPaginated(
+          page: pageKey, limit: _pageSize);
 
-        if (response.success && response.data != null) {
-          _words = response.data!;
-          _applySearchFilter();
-        }
+      if (response.success && response.data != null) {
+        return response.data!;
+      } else {
+        throw Exception(response.message ?? 'Failed to load words');
       }
     } catch (e) {
-      setError('Error loading words: $e');
-    } finally {
-      setBusy(false);
+      throw Exception(e.toString());
     }
   }
 
-  void _applySearchFilter() {
-    if (_query.isEmpty) {
-      _filteredWords = _words;
-    } else {
-      _filteredWords = _words
-          .where((word) =>
-              word.word.toLowerCase().contains(_query) ||
-              (word.senses.isNotEmpty &&
-                  word.senses.first.definition.toLowerCase().contains(_query)))
-          .toList();
+  // Fetch a page of words for a specific status
+  Future<List<Word>> _fetchStatusWordsPage(
+      int pageKey, WordStatus status) async {
+    try {
+      final response = await _wordRepository.getWordsByStatus(
+          status: status.value, page: pageKey, limit: _pageSize);
+
+      if (response.success && response.data != null) {
+        return response.data!;
+      } else {
+        throw Exception(response.message ?? 'Failed to load words');
+      }
+    } catch (e) {
+      throw Exception(e.toString());
     }
+  }
+
+  // Helper to get the appropriate controller for a status
+  PagingController<int, Word> _getPagingControllerForStatus(WordStatus status) {
+    switch (status) {
+      case WordStatus.all:
+        return allWordsPagingController;
+      case WordStatus.learning:
+        return learningWordsPagingController;
+      case WordStatus.learned:
+        return learnedWordsPagingController;
+      case WordStatus.skip:
+        return skippedWordsPagingController;
+    }
+  }
+
+  // Get the current paging controller based on active status
+  PagingController<int, Word> get currentPagingController =>
+      _getPagingControllerForStatus(_activeStatus);
+
+  // Set active filter status
+  void setActiveStatus(WordStatus status) {
+    if (_activeStatus != status) {
+      _activeStatus = status;
+      notifyListeners();
+    }
+  }
+
+  // Search words
+  void searchWords(String query) {
+    _searchQuery = query;
+
+    // Reset all pagination controllers
+    allWordsPagingController.refresh();
+    learningWordsPagingController.refresh();
+    learnedWordsPagingController.refresh();
+    skippedWordsPagingController.refresh();
 
     notifyListeners();
+  }
+
+  // Audio playback indicator
+  void setPlayingAudio(bool isPlaying) {
+    _isPlayingAudio = isPlaying;
+    notifyListeners();
+  }
+
+  // Play audio
+  Future<void> playAudio(String audioUrl) async {
+    if (audioUrl.isEmpty) return;
+
+    setPlayingAudio(true);
+
+    // Audio playback logic would go here
+
+    // Simulate audio playback completion after 2 seconds
+    await Future.delayed(const Duration(seconds: 2));
+
+    setPlayingAudio(false);
   }
 }
